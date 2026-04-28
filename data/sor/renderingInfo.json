@@ -1,0 +1,54 @@
+{
+  "venueKey": "b2cda05b-7198-4e35-a44b-1a60586b4f7c",
+  "venueId": "6975fb849aea0b110da39b01",
+  "key": "b5925f0d-e581-4bc3-b2b8-942c8cbc40ee",
+  "name": "ayed-at-vocally-riyadh",
+  "isBestAvailableEnabled": true,
+  "specifications": [
+    {
+      "id": 1,
+      "name": "VIP",
+      "color": "#54BE75",
+      "isAccessible": false
+    },
+    {
+      "id": 2,
+      "name": "Platinum",
+      "color": "rgba(227,84,84,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 3,
+      "name": "Gold",
+      "color": "rgba(215,166,84,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 4,
+      "name": "Silver",
+      "color": "rgba(170,118,211,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 5,
+      "name": "Bronze",
+      "color": "#0A5AAF",
+      "isAccessible": false
+    }
+  ],
+  "isEnded": false,
+  "isSeason": false,
+  "tableBookingConfig": {
+    "mode": "INHERIT"
+  },
+  "isResaleDisabled": false,
+  "restrictResaleToSingleSale": true,
+  "isPreviewEnabled": false,
+  "isRecaptchaRequired": true,
+  "isDynamicPricingEnabled": false,
+  "colorBySeatType": false,
+  "rendered_3d_venue": {
+    "enabled": false,
+    "venueID": ""
+  }
+}
