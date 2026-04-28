@@ -10,7 +10,9 @@ import { hold_object } from './socket_book.js';
 import { createBookedSeatObject_section } from './create_booked_seat_object.js';
 import { constructBookedSeatObject as constructBookedSeatObject_v1 } from './create_booked_seat_object_v1.js';
 import 'dotenv/config'
-import { fetchRenderingInfo as fetchRenderingInfoV1, getOrCreateBrowserId } from '../seatsio/seatsioclasses.js';
+import { fetchRenderingInfo as fetchRenderingInfoV1, getOrCreateBrowserId } from '../seatsio/seatsio_classes.js';
+import { browserFetch } from '../utils/browser_fetch.js';
+import { readCookie } from '../lib/chunk-UFCTKZW2.js';
 
 const { 
   account, proxy, url, usePreparedAccessTokens, blockName,  freeSeatsBatch, isSeason,
@@ -154,9 +156,10 @@ async function bookTicket() {
         } else {
             for (const currentSeat of objectsInfoToCheckOut) {
                 console.log('preparing objectsInfoToCheckOut for', currentSeat);
-                
-                const selectedSeats = objectsInfoToCheckOut.map(seat => seat.objectLabelOrUuid);
-                const bookedSeat = constructBookedSeatObject_v1(currentSeat.objectLabelOrUuid, renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, selectedSeats);
+
+                const selectedSeats = objectsInfoToCheckOut.map(seat => seat.objectLabelOrUuid || seat.name);
+                const seatLabel = currentSeat.objectLabelOrUuid || currentSeat.name;
+                const bookedSeat = constructBookedSeatObject_v1(seatLabel, renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, selectedSeats);
                 // write to generated_booked_seat_object_v1.json
                 fs.writeFileSync(`./${DATA_DIR}/sor/generated_booked_seat_object_v1.json`, JSON.stringify(bookedSeat, null, 4));
                 objectsInfoToCheckOutOrder.push(bookedSeat);
@@ -196,9 +199,38 @@ async function bookTicket() {
             log('error', 'Failed to update favorite team  got no team key');
         }
 // return;
-        const captcha = await generateRecaptchaToken('checkout');
+        const eventData = eventDetails?.data || eventDetails;
+        const hasCheckoutCaptcha = eventData?.has_checkout_captcha !== false;
+        const captcha = hasCheckoutCaptcha ? await generateRecaptchaToken('checkout') : null;
+        if (!hasCheckoutCaptcha) log('info', 'Skipping checkout captcha (has_checkout_captcha=false)');
+
         const lang = botVersion === 'v2' ? 'en' : 'ar';
         const utmSessionId = botVersion === 'v2' ? "5db2f0f9-748d-4125-a142-9db8d9b0576d" : "d475feca-bbd2-48fc-81bb-e5cd2cff10d4";
+
+        const eventFees = eventData?.fees;
+        const feesPayload = (eventFees && eventFees.amount > 0) ? {
+            fees: {
+                title: eventFees.title || '',
+                amount: eventFees.amount,
+                vat: eventFees.vat || 0,
+                fee_type: eventFees.fee_type || null,
+                fee_ticket_type: eventFees.fee_ticket_type || null
+            }
+        } : {};
+
+        // Build tickets array for new /checkout API (replaces selectedSeats)
+        const ticketsArray = objectsInfoToCheckOutOrder.map(seat => {
+            const ticketType = eventData.event_tickets?.find(t =>
+                t.title === seat.category?.label ||
+                parseInt(t.seats_io_category) === seat.category?.key
+            );
+            return {
+                ticket_type_id: ticketType?._id || null,
+                qty: 1,
+                seat_label: seat.label
+            };
+        });
+
         const checkoutOrder = {
             "event_id": eventId,
             "redirect": "https://webook.com/ar/payment-success",
@@ -214,37 +246,70 @@ async function bookTicket() {
             "merchandise": [],
             "addons": [],
             "vouchers": [],
-            // time_slot_id: eventDetails.data._id,
             "holdToken": holdToken,
+            "tickets": ticketsArray,
             "selectedSeats": JSON.stringify(objectsInfoToCheckOutOrder),
             "season_id": eventId,
             "captcha": captcha,
             "tpp_cart_id": null,
             "app_source": "rs",
-            "utm_wbk_wa_session_id": utmSessionId
+            "utm_wbk_wa_session_id": utmSessionId,
+            ...feesPayload
         };
-        // write the checkoutOrder to fs 
+        // write the checkoutOrder to fs
         fs.writeFileSync(`./${DATA_DIR}/sor/checkoutOrderForTest.json`, JSON.stringify(checkoutOrder, null, 4));
 
-         endpoint = isSeason ? `/season-seat/checkout?lang=${lang}` : `/event-seat/checkout?lang=${lang}`;
+        endpoint = `/checkout?lang=${lang}`;
         if (botVersion === 'v2') {
             headers["token"] = "e9aac1f2f0b6c07d6be070ed14829de684264278359148d6a582ca65a50934d2";
         }
         const cookie = process.env.PREPARE_TOKEN_COOKIE;
-        const checkoutResJson = await fetchClient({
-            baseUrl: ApiConfig.config.wbk.authApi,
-            url: endpoint,
-            agent,
-            cookie,
-            options: {
-            agent,
-                method: "POST",
-                body: JSON.stringify(checkoutOrder),
-                includeAuth: true,
-                includeToken: true,
-                headers: headers
-            }
-        });
+        const useBrowserCheckout = process.env.USE_BROWSER_FOR_CHECKOUT === 'true';
+
+        let checkoutResJson;
+        if (useBrowserCheckout) {
+            log('info', 'Using browser fetch for checkout (Cloudflare bypass)');
+            const fullCheckoutUrl = `${ApiConfig.config.wbk.authApi}${endpoint}`;
+            const authToken = readCookie('token') || '';
+            const browserHeaders = {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json, text/plain, */*',
+                'Authorization': authToken ? `Bearer ${authToken}` : '',
+                'token': ApiConfig.config.wbk.apiToken,
+                'origin': 'https://webook.com',
+                'referer': 'https://webook.com/',
+                'sec-ch-ua': '"Google Chrome";v="124", "Not?A_Brand";v="8", "Chromium";v="124"',
+                'sec-ch-ua-mobile': '?0',
+                'sec-ch-ua-platform': '"Windows"',
+                'sec-fetch-dest': 'empty',
+                'sec-fetch-mode': 'cors',
+                'sec-fetch-site': 'same-site',
+                'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                'cookie': cookie || '',
+                ...headers
+            };
+            const browserRes = await browserFetch(fullCheckoutUrl, {
+                method: 'POST',
+                headers: browserHeaders,
+                body: JSON.stringify(checkoutOrder)
+            });
+            checkoutResJson = await browserRes.json();
+        } else {
+            checkoutResJson = await fetchClient({
+                baseUrl: ApiConfig.config.wbk.authApi,
+                url: endpoint,
+                agent,
+                cookie,
+                options: {
+                    agent,
+                    method: "POST",
+                    body: JSON.stringify(checkoutOrder),
+                    includeAuth: true,
+                    includeToken: true,
+                    headers: headers
+                }
+            });
+        }
 
         if (checkoutResJson["status"] == "success") {
 

@@ -1,54 +1,186 @@
 {
-  "venueKey": "b2cda05b-7198-4e35-a44b-1a60586b4f7c",
-  "venueId": "6975fb849aea0b110da39b01",
-  "key": "b5925f0d-e581-4bc3-b2b8-942c8cbc40ee",
-  "name": "ayed-at-vocally-riyadh",
+  "venueKey": "4b899bd3-18ce-441b-a739-b9f0c637e9ef",
+  "venueId": "6935625d9bef06fea384e157",
+  "key": "3beb53ab-a5b8-4f4b-9120-d8590244fc89",
+  "name": "Al Ahli Season Tickets 2025 /2026",
   "isBestAvailableEnabled": true,
   "specifications": [
     {
       "id": 1,
-      "name": "VIP",
-      "color": "#54BE75",
+      "name": "CAT 1",
+      "color": "rgba(69,163,241,1)",
       "isAccessible": false
     },
     {
       "id": 2,
-      "name": "Platinum",
-      "color": "rgba(227,84,84,1)",
+      "name": "CAT 2",
+      "color": "#58B44F",
       "isAccessible": false
     },
     {
       "id": 3,
-      "name": "Gold",
-      "color": "rgba(215,166,84,1)",
+      "name": "CAT 3",
+      "color": "rgba(242,149,54,1)",
       "isAccessible": false
     },
     {
       "id": 4,
-      "name": "Silver",
-      "color": "rgba(170,118,211,1)",
+      "name": "Premium",
+      "color": "#CC2CF3",
       "isAccessible": false
     },
     {
       "id": 5,
-      "name": "Bronze",
-      "color": "#0A5AAF",
+      "name": "Cat 1 Away",
+      "color": "#545384",
+      "isAccessible": false
+    },
+    {
+      "id": 7,
+      "name": "Premium Away",
+      "color": "#CC2CF3",
+      "isAccessible": false
+    },
+    {
+      "id": 8,
+      "name": "Silver",
+      "color": "rgba(158,153,164,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 9,
+      "name": "Gold",
+      "color": "rgba(243,179,81,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 10,
+      "name": "VIP",
+      "color": "#992C4E",
+      "isAccessible": false
+    },
+    {
+      "id": 11,
+      "name": "ACCESSIBILITY",
+      "color": "rgba(144,245,0,1)",
+      "isAccessible": true
+    },
+    {
+      "id": 12,
+      "name": "Box 1",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 13,
+      "name": "Box 2",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 14,
+      "name": "Box 3",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 15,
+      "name": "Box 4",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 16,
+      "name": "Box 5",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 17,
+      "name": "Box 6",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 18,
+      "name": "Box 7",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 19,
+      "name": "Box 8",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 20,
+      "name": "Box 9",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 21,
+      "name": "Box 10",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 22,
+      "name": "Box 11",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 23,
+      "name": "Box 12",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 24,
+      "name": "Box 13",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 25,
+      "name": "Box 14",
+      "color": "#F53F3F",
+      "isAccessible": false
+    },
+    {
+      "id": 26,
+      "name": "Box 15",
+      "color": "#F24F51",
       "isAccessible": false
     }
   ],
+  "allocations": [
+    {
+      "id": "d1962c18-ab8d-42e1-b238-db0396795880",
+      "name": "COMMAN",
+      "color": "#b09336",
+      "index": 4,
+      "isPrivate": false
+    },
+    {
+      "id": "32b1ef53-0716-41bb-97f8-38faacdf00dc",
+      "name": "HOME ",
+      "color": "#c12f2f",
+      "index": 1,
+      "isPrivate": false
+    }
+  ],
   "isEnded": false,
-  "isSeason": false,
+  "isSeason": true,
   "tableBookingConfig": {
     "mode": "INHERIT"
   },
   "isResaleDisabled": false,
   "restrictResaleToSingleSale": true,
   "isPreviewEnabled": false,
-  "isRecaptchaRequired": true,
+  "isRecaptchaRequired": false,
   "isDynamicPricingEnabled": false,
-  "colorBySeatType": false,
-  "rendered_3d_venue": {
-    "enabled": false,
-    "venueID": ""
-  }
+  "colorBySeatType": false
 }

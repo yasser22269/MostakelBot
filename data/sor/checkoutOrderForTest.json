@@ -1,0 +1,33 @@
+{
+    "event_id": "6988958c3e60592f0a0cc9a5",
+    "redirect": "https://webook.com/ar/payment-success",
+    "redirect_failed": "https://webook.com/ar/payment-failed",
+    "booking_source": "rs-web",
+    "lang": "ar",
+    "payment_method": "credit_card",
+    "is_wallet": false,
+    "saudi_redeem": null,
+    "is_mada": false,
+    "is_amex": false,
+    "perks": [],
+    "merchandise": [],
+    "addons": [],
+    "vouchers": [],
+    "holdToken": {
+        "token": "136a69d9-b2b8-460a-b7fd-1757e3dc4273",
+        "tracing_id": "1777398495454-6aa119c48ca0d1383720841f01b797cf"
+    },
+    "tickets": [
+        {
+            "ticket_type_id": "6988958c3e60592f0a0cc9ac",
+            "qty": 1,
+            "seat_label": "01-A-3"
+        }
+    ],
+    "selectedSeats": "[{\"inSelectableChannel\":false,\"hashedChannelKey\":\"32b1ef53-0716-41bb-97f8-38faacdf00dc\",\"label\":\"01-A-3\",\"id\":\"01-A-3\",\"uuid\":\"19729\",\"sectionUUID\":\"694d4b43d2971c04f9970173\",\"heldInfo\":{\"uuid\":\"19729\",\"label\":\"01-A-3\"},\"labels\":{\"own\":\"3\",\"parent\":\"A\",\"section\":\"01\",\"displayedLabel\":\"01-A-3\"},\"disabledBySocialDistancingRules\":false,\"objectType\":\"Seat\",\"selected\":true,\"accessible\":false,\"restrictedView\":false,\"liftUpArmrests\":false,\"companionSeat\":false,\"semiAmbulatorySeat\":false,\"hearingImpaired\":false,\"plusSize\":false,\"category\":{\"label\":\"Premium\",\"color\":\"#cccccc\",\"accessible\":false,\"key\":4,\"pricing\":{\"price\":100,\"formattedPrice\":\"[SAR]100\"},\"isFiltered\":false,\"hasSelectableObjects\":true,\"selectableObjectsStatuses\":[\"free\"]},\"pricing\":{\"price\":100,\"formattedPrice\":\"[SAR]100\"},\"selectable\":true,\"status\":\"free\",\"isAvailable\":true,\"forSale\":true,\"dataPerEvent\":{\"3beb53ab-a5b8-4f4b-9120-d8590244fc89\":{\"status\":\"free\"}},\"entrance\":null,\"previousStatus\":null,\"center\":{\"x\":1915.314,\"y\":6873.0046},\"isOrphan\":false,\"parent\":{\"type\":\"row\"},\"seatId\":\"01-A-3\",\"chart\":{\"config\":{},\"iframe\":{},\"embedType\":\"Renderer\",\"selectedObjectsInput\":null,\"storage\":{\"key\":\"seatsio\"},\"selectedSeats\":[\"01-A-3\"],\"selectedObjects\":[\"01-A-3\"],\"holdToken\":{\"token\":\"136a69d9-b2b8-460a-b7fd-1757e3dc4273\",\"tracing_id\":\"1777398495454-6aa119c48ca0d1383720841f01b797cf\"},\"reservationToken\":{\"token\":\"136a69d9-b2b8-460a-b7fd-1757e3dc4273\",\"tracing_id\":\"1777398495454-6aa119c48ca0d1383720841f01b797cf\"},\"requestIdCtr\":6,\"requestCallbacks\":{},\"requestErrorCallbacks\":{},\"state\":\"RENDERED\",\"initialContainerDimensions\":{\"width\":999,\"height\":0},\"domElementListener\":{\"positionInViewportChangedListener\":null,\"maxSize\":4312,\"lastDimensions\":{\"width\":953,\"height\":715.33},\"lastPositionInViewport\":{\"top\":175,\"bottom\":964.458119,\"right\":1600.6,\"left\":696.9},\"stopRequested\":true,\"elementIsVisible\":true,\"lastViewportWidth\":1920,\"lastViewportHeight\":1080},\"iframeElementListener\":{\"widthChangedListener\":null,\"dimensionsChangedListener\":null,\"elementMadeVisibleListener\":null,\"elementMadeInvisibleListener\":null,\"maxSize\":null,\"maxSizeExceededListener\":null,\"lastDimensions\":{\"width\":928,\"height\":748.999},\"lastPositionInViewport\":{\"top\":155,\"bottom\":995.164105,\"right\":1612,\"left\":682.7},\"stopRequested\":true,\"elementIsVisible\":null,\"lastViewportWidth\":1920,\"lastViewportHeight\":1080},\"errorSentToDataCollector\":false,\"seatsioLoadedDeferred\":{\"promise\":{}},\"containerVisible\":{\"promise\":{}},\"renderingStart\":\"2026-04-28T17:47:37.127Z\",\"loadingScreen\":{}}}]",
+    "season_id": "6988958c3e60592f0a0cc9a5",
+    "captcha": null,
+    "tpp_cart_id": null,
+    "app_source": "rs",
+    "utm_wbk_wa_session_id": "d475feca-bbd2-48fc-81bb-e5cd2cff10d4"
+}

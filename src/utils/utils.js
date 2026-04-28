@@ -419,7 +419,7 @@ async function holdObject(account, proxy, freeSeat, teamID, notfirstTry,action =
 
           }else{
             log('success', 'Successfully hold', freeSeat.objectLabelOrUuid || seatNameOrLabel, 'for', account.split(':')[0]);
-            sendToTelegram(`${account.split(':')[0]} ${account.split(':')[1]} \nHeld: ${seatNameOrLabel || freeSeat.objectLabelOrUuid} \nEvent URL: ${process.env.PROMPT_URL}`);
+            await sendToTelegram(`${account.split(':')[0]} ${account.split(':')[1]} \nHeld: ${seatNameOrLabel || freeSeat.objectLabelOrUuid} \nEvent URL: ${process.env.PROMPT_URL}`);
           }
         }else{
           log('warning', 'successfully released', freeSeat.objectLabelOrUuid || seatNameOrLabel, 'for', account.split(':')[0]);
@@ -477,7 +477,7 @@ const startWorker = (account, proxy,freeSeatsBatch) => {
             chartToken, // v1
         };
 
-        const workerFile =   '../bot/worker.js';
+        const workerFile = './src/bot/worker.js';
         const worker = new Worker(workerFile, { workerData });
         activeWorkers.add(worker);
 
@@ -679,6 +679,20 @@ async function update() {
     // if (freeSeats.length > 0) return;
 }
 
+// Returns all unique non-null allocation_channel_keys from event tickets (v3 support)
+function getAllocationChannelKeys(eventData) {
+    const tickets = eventData?.event_tickets || [];
+    const keys = new Set();
+    for (const ticket of tickets) {
+        if (Array.isArray(ticket.allocation_channel_keys)) {
+            for (const key of ticket.allocation_channel_keys) {
+                if (key) keys.add(key);
+            }
+        }
+    }
+    return [...keys];
+}
+
 function setupChannelKeys(channelType = '') {
     const eventData = eventDetails?.data || eventDetails;
     channelKeys = eventData.channel_keys;
@@ -696,7 +710,11 @@ function setupChannelKeys(channelType = '') {
     channelKeyForHomeTeam = homeTeamKey ? channelKeys[homeTeamKey]?.[0] : undefined;
     channelKeyForAwayTeam = awayTeamKey ? channelKeys[awayTeamKey]?.[0] : undefined;
     channelKeyCommon = channelKeys['common']?.[0];
-    channelKeysToCheck = ["NO_CHANNEL", channelKeyCommon, channelKeyForHomeTeam].filter(Boolean);
+
+    // For v3: supplement channelKeysToCheck with allocation-based channel keys from tickets
+    const allocationKeys = botVersion === 'v3' ? getAllocationChannelKeys(eventData) : [];
+
+    channelKeysToCheck = ["NO_CHANNEL", channelKeyCommon, channelKeyForHomeTeam, ...allocationKeys].filter(Boolean);
     currentChannelKey = homeTeamKey;
     currentChannelType = channelType;
 }
@@ -716,7 +734,19 @@ async function main(config = {}) {
 
     url = config.PROMPT_URL;
     proxies = getProxies();
-    const eventKeyFromPrompt = url.split('/')[5];
+    const eventKeyFromPrompt = (() => {
+        try {
+            const parts = new URL(url).pathname.split('/').filter(Boolean);
+            const markers = ['events', 'event-detail', 'season-detail'];
+            for (const marker of markers) {
+                const idx = parts.indexOf(marker);
+                if (idx !== -1 && parts[idx + 1]) return parts[idx + 1];
+            }
+            return parts[5] || '';
+        } catch (_) {
+            return url.split('/')[5] || '';
+        }
+    })();
      isSeason = process.env.IS_SEASON === 'true' ;
     log('info', 'Event Key:', eventKeyFromPrompt);
 
@@ -829,9 +859,10 @@ async function getObjectsWithChannels(){
       const hashes = await getHashes();
     console.log('hashes are ',hashes);
       const channelOrAllocation = process.env.BOT_VERSION === 'v3' ? 'allocations' : 'channels';
-      const homeObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.home);
-      const awayObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.away);
-      const commonObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.common);
+      const allocationList = renderingInfo[channelOrAllocation] || [];
+      const homeObjects = allocationList.find(o => o.hashedKey === hashes.home);
+      const awayObjects = allocationList.find(o => o.hashedKey === hashes.away);
+      const commonObjects = allocationList.find(o => o.hashedKey === hashes.common);
     //console.log('homeObjects are ',homeObjects);
 
       let result = process.env.BOT_VERSION == 'v1' ? {

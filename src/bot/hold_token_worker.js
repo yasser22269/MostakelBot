@@ -84,13 +84,15 @@ async function fetchHoldToken() {
 
     const siteKey = ApiConfig.config.cloudflarecaptcha.VITE_PUBLIC_TURNSTILE_SITE_KEY;
     const websiteURL = 'https://api.webook.com/api/v2';
-    
+
     let isError = true;
     let turnstileTokenResult = null;
     let retryCount = 0;
     const maxRetries = 5;
-    const captchaRequired = process.env.ENABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true';
-    //if(!(process.env.DISABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true')){
+    // Auto-detect Turnstile requirement from eventDetails, fallback to env var
+    const hasCfTurnstile = eventData?.has_cf_turnstile === true;
+    const captchaRequired = hasCfTurnstile || process.env.ENABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true';
+    if (hasCfTurnstile) console.log('Turnstile required (detected from eventDetails has_cf_turnstile=true)');
     if(captchaRequired){
         while(isError && retryCount < maxRetries){
           try {
@@ -156,6 +158,19 @@ async function fetchHoldToken() {
     }
   }
   cookieToBeUsed = additionalCookie;
+
+  // Auto-construct _q_session_ queue cookie if QUEUE_TOKEN is set but cookie is missing
+  const queueToken = process.env.QUEUE_TOKEN || '';
+  if (queueToken && !cookieToBeUsed.includes('_q_session_')) {
+    const queueCookieName = `_q_session_-event-detail-${eventSlug}`;
+    const queueCookiePart = `${queueCookieName}=${queueToken}`;
+    cookieToBeUsed = cookieToBeUsed ? `${cookieToBeUsed}; ${queueCookiePart}` : queueCookiePart;
+    console.log(`Auto-constructed queue session cookie for slug: ${eventSlug}`);
+    try {
+      const queuePayload = JSON.parse(Buffer.from(queueToken.split('.')[1], 'base64').toString('utf-8'));
+      console.log(`Queue position (n): ${queuePayload.n}, expires: ${new Date(queuePayload.e * 1000).toISOString()}`);
+    } catch (_) {}
+  }
 
     let holdTokenResponse;
     if (isAhlan) {
