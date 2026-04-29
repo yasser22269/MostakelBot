@@ -555,15 +555,20 @@ async function updateObjects() {
 
     if (botVersion === 'v3') {
         //log('warning', 'start fetching V3', eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home')
-        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home');
+        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home') || [];
     } else if (botVersion === 'v2') {
         //log('warning', 'start fetching', eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home')
-        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home');
+        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home') || [];
+    }
+
+    if (!objectStatusesJsonParsed || objectStatusesJsonParsed.length === 0) {
+        console.log("No data fetched or empty data, ensuring array...");
+        objectStatusesJsonParsed = [];
     }
 
     if (botVersion === 'v2' || botVersion === 'v3') {
-        if (objectStatusesJsonParsed?.length === 0) console.log('no object status found');
-        objectStatusesJsonParsed?.sort((a, b) =>
+        if (objectStatusesJsonParsed.length === 0) console.log('no object status found');
+        objectStatusesJsonParsed.sort((a, b) =>
             (a.name || a.label || '').localeCompare((b.name || b.label || ''), undefined, { numeric: true })
         );
     } else {
@@ -572,10 +577,11 @@ async function updateObjects() {
             const objectStatusesRes = await fetchRenderingInfoV1(objectStatusesURL, chartToken, browserId, { method: 'GET' }, true, agentV1);
             const objectStatusesBuffer = await objectStatusesRes.arrayBuffer();
             const objectStatusesJson = SeatsioDeobfuscator.deobfuscate(objectStatusesBuffer, chartKey);
-            objectStatusesJsonParsed = JSON.parse(objectStatusesJson);
-            objectStatusesJsonParsed?.sort((a, b) => a.objectLabelOrUuid.localeCompare(b.objectLabelOrUuid, undefined, { numeric: true }));
+            objectStatusesJsonParsed = JSON.parse(objectStatusesJson) || [];
+            objectStatusesJsonParsed.sort((a, b) => a.objectLabelOrUuid.localeCompare(b.objectLabelOrUuid, undefined, { numeric: true }));
         } catch (e) {
-            console.log(e);
+            console.log("Error fetching v1 statuses:", e);
+            objectStatusesJsonParsed = [];
         }
     }
     // const objectStatusesFilePath = path.join(FILE_PATHS.OBJECT_STATUSES_AWAY_FILE, `objectStatuses_${currentTeam === 'home' ? 'away' : 'home'}.json`);
@@ -734,8 +740,8 @@ async function main(config = {}) {
 
     url = config.PROMPT_URL;
     proxies = getProxies();
-    const eventKeyFromPrompt = (() => {
-        try {
+    const eventKeyFromPrompt = process.env.FORCE_EVENT_SLUG_VALUE || (() => {      
+          try {
             const parts = new URL(url).pathname.split('/').filter(Boolean);
             const markers = ['events', 'event-detail', 'season-detail'];
             for (const marker of markers) {
@@ -782,9 +788,11 @@ async function main(config = {}) {
     workspaceKey = eventData?.seats_io?.workspace_key || ENV_SEATCLOUD_WORKSPACE_KEY;
     eventId = eventData._id;
     chartKey = eventData.seats_io.chart_key;
-    eventKey = isSeason
+    eventKey = process.env.FORCE_EVENT_SLUG_VALUE || (
+    isSeason
         ? eventData.seats_io.season_key
-        : eventData.seats_io.event_key;
+        : eventData.seats_io.event_key
+);
     try {
         holdTokens = JSON.parse(fs.readFileSync(FILE_PATHS.HOLD_TOKENS_FILE));
     } catch (error) {
