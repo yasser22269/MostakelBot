@@ -1,19 +1,19 @@
 {
     "inSelectableChannel": false,
-    "hashedChannelKey": "32b1ef53-0716-41bb-97f8-38faacdf00dc",
-    "label": "01-A-3",
-    "id": "01-A-3",
-    "uuid": "19729",
-    "sectionUUID": "694d4b43d2971c04f9970173",
+    "hashedChannelKey": "d1962c18-ab8d-42e1-b238-db0396795880",
+    "label": "21-A-3",
+    "id": "21-A-3",
+    "uuid": "45889",
+    "sectionUUID": "694d4b43d2971c04f997019d",
     "heldInfo": {
-        "uuid": "19729",
-        "label": "01-A-3"
+        "uuid": "45889",
+        "label": "21-A-3"
     },
     "labels": {
         "own": "3",
         "parent": "A",
-        "section": "01",
-        "displayedLabel": "01-A-3"
+        "section": "21",
+        "displayedLabel": "21-A-3"
     },
     "disabledBySocialDistancingRules": false,
     "objectType": "Seat",
@@ -26,13 +26,13 @@
     "hearingImpaired": false,
     "plusSize": false,
     "category": {
-        "label": "Premium",
+        "label": "Silver",
         "color": "#cccccc",
         "accessible": false,
-        "key": 4,
+        "key": 8,
         "pricing": {
-            "price": 100,
-            "formattedPrice": "[SAR]100"
+            "price": 200,
+            "formattedPrice": "[SAR]200"
         },
         "isFiltered": false,
         "hasSelectableObjects": true,
@@ -41,8 +41,8 @@
         ]
     },
     "pricing": {
-        "price": 100,
-        "formattedPrice": "[SAR]100"
+        "price": 200,
+        "formattedPrice": "[SAR]200"
     },
     "selectable": true,
     "status": "free",
@@ -56,14 +56,14 @@
     "entrance": null,
     "previousStatus": null,
     "center": {
-        "x": 1915.314,
-        "y": 6873.0046
+        "x": 8703.673999999999,
+        "y": 7174.3218
     },
     "isOrphan": false,
     "parent": {
         "type": "row"
     },
-    "seatId": "01-A-3",
+    "seatId": "21-A-3",
     "chart": {
         "config": {},
         "iframe": {},
@@ -73,39 +73,33 @@
             "key": "seatsio"
         },
         "selectedSeats": [
-            "01-A-3"
+            "21-A-3"
         ],
         "selectedObjects": [
-            "01-A-3"
+            "21-A-3"
         ],
-        "holdToken": {
-            "token": "136a69d9-b2b8-460a-b7fd-1757e3dc4273",
-            "tracing_id": "1777398495454-6aa119c48ca0d1383720841f01b797cf"
-        },
-        "reservationToken": {
-            "token": "136a69d9-b2b8-460a-b7fd-1757e3dc4273",
-            "tracing_id": "1777398495454-6aa119c48ca0d1383720841f01b797cf"
-        },
-        "requestIdCtr": 6,
+        "holdToken": "dd3a3cbe-eeb7-4384-a9a9-d659516b3770",
+        "reservationToken": "dd3a3cbe-eeb7-4384-a9a9-d659516b3770",
+        "requestIdCtr": 5,
         "requestCallbacks": {},
         "requestErrorCallbacks": {},
         "state": "RENDERED",
         "initialContainerDimensions": {
-            "width": 999,
+            "width": 929,
             "height": 0
         },
         "domElementListener": {
             "positionInViewportChangedListener": null,
-            "maxSize": 4312,
+            "maxSize": 4935,
             "lastDimensions": {
-                "width": 953,
-                "height": 715.33
+                "width": 998,
+                "height": 761.662
             },
             "lastPositionInViewport": {
-                "top": 175,
-                "bottom": 964.458119,
-                "right": 1600.6,
-                "left": 696.9
+                "top": 161,
+                "bottom": 997.363599,
+                "right": 1608.1,
+                "left": 681.8
             },
             "stopRequested": true,
             "elementIsVisible": true,
@@ -120,14 +114,14 @@
             "maxSize": null,
             "maxSizeExceededListener": null,
             "lastDimensions": {
-                "width": 928,
-                "height": 748.999
+                "width": 946,
+                "height": 727.342
             },
             "lastPositionInViewport": {
-                "top": 155,
-                "bottom": 995.164105,
-                "right": 1612,
-                "left": 682.7
+                "top": 171,
+                "bottom": 958.291441,
+                "right": 1640.3,
+                "left": 691.8
             },
             "stopRequested": true,
             "elementIsVisible": null,
@@ -141,7 +135,7 @@
         "containerVisible": {
             "promise": {}
         },
-        "renderingStart": "2026-04-28T17:47:37.127Z",
+        "renderingStart": "2026-04-29T11:48:02.974Z",
         "loadingScreen": {}
     }
 }
