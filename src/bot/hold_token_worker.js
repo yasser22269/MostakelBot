@@ -61,10 +61,12 @@ async function fetchHoldToken() {
     if (token) {
       createCookie({ name: 'token', value: token, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' }); // add the additional cookies
     } else {
-      const loginData = await useLogin({
-          lang: 'en',
-          agent
-      }).mutate({ email, password });
+      const loginData = await new Promise((resolve, reject) => {
+        useLogin({ lang: 'en', agent }).mutate({ email, password }, {
+          onSuccess: (data) => { resolve(data); },
+          onError: (error) => { reject(error); }
+        });
+      });
       accountAccessToken = loginData?.user?.access_token || loginData?.access_token || loginData?.data?.access_token || '';
       console.log('[STEP1] loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| token SET:', !!accountAccessToken);
       if (!accountAccessToken) {
