@@ -1,6 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import 'dotenv/config';
+
+// ─── Global crash guards ─────────────────────────────────────────────────────
+process.on('uncaughtException', (err) => {
+  console.error(`[CRASH GUARD] uncaughtException — process kept alive:\n`, err);
+});
+process.on('unhandledRejection', (reason) => {
+  console.error(`[CRASH GUARD] unhandledRejection — process kept alive:\n`, reason);
+});
+// ─────────────────────────────────────────────────────────────────────────────
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import { startWorker,sendToTelegram, getAccounts, getProxies, holdObject, log, main as utilsMain, getObjectStatusesFromFS, update, freeSeats as getFreeSeats ,refreshHeldObjects} from '../src/utils/utils.js';
 import { listenToSeats , establish_socket_connection,accountSockets} from '../src/bot/socket_book.js';

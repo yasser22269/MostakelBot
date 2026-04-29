@@ -307,7 +307,8 @@ export async function establish_socket_connection(account, options = {}) {
     }
   }
 
-  const url = `wss://api.seatcloud.com:8443/?event=${eventKey}&token=${holdToken}&teamID=${teamId}&reCaptchaToken=${reCaptchaToken}&tracingId=${finalTracingId}`;
+  const reCaptchaParam = reCaptchaToken ? `&reCaptchaToken=${reCaptchaToken}` : '';
+  const url = `wss://api.seatcloud.com:8443/?event=${eventKey}&token=${holdToken}&teamID=${teamId}${reCaptchaParam}&tracingId=${finalTracingId}`;
 
   console.log(`trying to establish a new connection for account ${email}, url is ${url}`);
 

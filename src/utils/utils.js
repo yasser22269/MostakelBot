@@ -475,6 +475,8 @@ const startWorker = (account, proxy,freeSeatsBatch) => {
             holdToken,
             botVersion,
             chartToken, // v1
+            // Pass raw WebSocket seat data for V3 fallback when objectStatuses is empty
+            socketSeatData: freeSeatsBatch[0] || null,
         };
 
         const workerFile = './src/bot/worker.js';

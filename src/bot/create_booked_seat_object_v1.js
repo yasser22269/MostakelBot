@@ -23,11 +23,27 @@ function constructBookedSeatObject(objectLabel, renderingInfo, publishedDetails,
     const eventData = eventDetails?.data || eventDetails;
 
     // 1. Find the object's current status (V3 API uses 'name', V1/V2 uses 'objectLabelOrUuid')
-    const objectStatus = objectStatuses.find(obj => obj.objectLabelOrUuid === objectLabel || obj.name === objectLabel);
+    let objectStatus = objectStatuses.find(obj => obj.objectLabelOrUuid === objectLabel || obj.name === objectLabel);
 
     if (!objectStatus) {
-        console.error(`Status for object ${objectLabel} not found.`);
-        return {};
+        console.warn(`Status for object ${objectLabel} not found in objectStatuses — falling back to freeSeat socket data.`);
+        // Build a minimal objectStatus from the freeSeat info passed to the worker (from WebSocket)
+        const freeSeat = (eventDetails?.__freeSeatData || {})[objectLabel] || {};
+        objectStatus = {
+            objectLabelOrUuid: objectLabel,
+            name: objectLabel,
+            label: objectLabel,
+            status: 'reservedByToken',
+            specificationKey: freeSeat.specificationKey || null,
+            specificationName: freeSeat.specificationName || freeSeat.categoryLabel || null,
+            allocation: freeSeat.channel || null,
+            uuid: objectLabel,
+            ids: { own: objectLabel.split('-')[2], parent: objectLabel.split('-')[1], section: objectLabel.split('-')[0] },
+            ...freeSeat
+        };
+        if (!objectStatus.specificationName) {
+            console.warn(`No specificationName found for ${objectLabel} — pricing may be missing.`);
+        }
     }
     // 2. Find the channel information (V3 uses 'allocations', V1/V2 uses 'channels')
     const isV3Format = !publishedDetails.subChart && Array.isArray(publishedDetails.sections);

@@ -17,7 +17,8 @@ import { readCookie } from '../lib/chunk-UFCTKZW2.js';
 const { 
   account, proxy, url, usePreparedAccessTokens, blockName,  freeSeatsBatch, isSeason,
   chartKey, eventId, workspaceKey, browserId, isGeneralAdmissionAreas, eventKey, channelKeysToCheck, 
-  renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, botVersion, chartToken 
+  renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, botVersion, chartToken,
+  socketSeatData
 } = workerData;
 
 const [email, password, token] = account.split(':');
@@ -154,6 +155,14 @@ async function bookTicket() {
                 return;
             }
         } else {
+            // Inject socket seat data as fallback for V3 (when objectStatuses is empty)
+            if (socketSeatData) {
+                const seatLabel = socketSeatData.objectLabelOrUuid || socketSeatData.name || socketSeatData.label;
+                if (seatLabel && eventDetails) {
+                    if (!eventDetails.__freeSeatData) eventDetails.__freeSeatData = {};
+                    eventDetails.__freeSeatData[seatLabel] = socketSeatData;
+                }
+            }
             for (const currentSeat of objectsInfoToCheckOut) {
                 console.log('preparing objectsInfoToCheckOut for', currentSeat);
 
