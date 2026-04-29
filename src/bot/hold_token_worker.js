@@ -75,16 +75,19 @@ async function fetchHoldToken() {
         });
       });
       accountAccessToken = loginData?.user?.access_token || loginData?.access_token || loginData?.data?.access_token || '';
-      console.log('DEBUG loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| accountAccessToken SET:', !!accountAccessToken);
+      console.log('[STEP1] loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| token SET:', !!accountAccessToken);
       if (!accountAccessToken) {
         throw new Error(`Login succeeded but no access_token found. loginData: ${JSON.stringify(loginData)}`);
       }
       createCookie({ name: 'token', value: accountAccessToken, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' });
+      console.log('[STEP2] createCookie done for:', email);
     }
     const DATA_DIR = process.env.DATA_DIR || 'data';
+    console.log('[STEP3] DATA_DIR:', DATA_DIR);
     const eventDetails = JSON.parse(fs.readFileSync(`./${DATA_DIR}/sor/eventDetails.json`));
     const eventData = eventDetails?.data || eventDetails;
     const renderInfo = JSON.parse(fs.readFileSync(`./${DATA_DIR}/sor/renderingInfo.json`));
+    console.log('[STEP4] files read, eventId:', eventData?._id, '| eventDetails.data exists:', !!eventDetails?.data);
 
     const siteKey = ApiConfig.config.cloudflarecaptcha.VITE_PUBLIC_TURNSTILE_SITE_KEY;
     const websiteURL = 'https://api.webook.com/api/v2';
@@ -96,6 +99,7 @@ async function fetchHoldToken() {
     // Auto-detect Turnstile requirement from eventDetails, fallback to env var
     const hasCfTurnstile = eventData?.has_cf_turnstile === true;
     const captchaRequired = hasCfTurnstile || process.env.ENABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true';
+    console.log('[STEP5] captchaRequired:', captchaRequired, '| hasCfTurnstile:', hasCfTurnstile);
     if (hasCfTurnstile) console.log('Turnstile required (detected from eventDetails has_cf_turnstile=true)');
     if(captchaRequired){
         while(isError && retryCount < maxRetries){
@@ -134,7 +138,7 @@ async function fetchHoldToken() {
     const isAhlanByPromptUrl = hasEventQueryParam(process.env.PROMPT_URL || '');
     const isAhlanByShape = Boolean(eventDetails && !eventDetails.data);
     const isAhlan = isAhlanByEnv || isAhlanByPromptUrl || isAhlanByShape;
-    console.log('eventSlug',eventSlug);
+    console.log('[STEP6] eventSlug:', eventSlug, '| isAhlan:', isAhlan, '(byEnv:', isAhlanByEnv, 'byShape:', isAhlanByShape, ')');
 
     const botVersion = process.env.BOT_VERSION || 'v1';
     const url = `/event-detail/${eventData.slug}/hold-token?lang=en`;
