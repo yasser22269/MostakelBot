@@ -786,13 +786,14 @@ async function main(config = {}) {
     eventDetails = JSON.parse(fs.readFileSync(FILE_PATHS.EVENT_DETAILS_FILE));
     const eventData = eventDetails?.data || eventDetails;
     workspaceKey = eventData?.seats_io?.workspace_key || ENV_SEATCLOUD_WORKSPACE_KEY;
-    eventId = eventData._id;
-    chartKey = eventData.seats_io.chart_key;
+    eventId = eventData?._id || '';
+    chartKey = eventData?.seats_io?.chart_key || null;
     eventKey = process.env.FORCE_EVENT_SLUG_VALUE || (
     isSeason
-        ? eventData.seats_io.season_key
-        : eventData.seats_io.event_key
-);
+        ? eventData?.seats_io?.season_key
+        : eventData?.seats_io?.event_key
+    ) || eventKeyFromPrompt;
+    
     try {
         holdTokens = JSON.parse(fs.readFileSync(FILE_PATHS.HOLD_TOKENS_FILE));
     } catch (error) {
