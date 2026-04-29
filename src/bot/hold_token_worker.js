@@ -237,11 +237,26 @@ async function fetchHoldToken() {
     const tokenId = json.data?.token || json.token
 
     console.log('got hold token id ', tokenId);
+    if (!tokenId) {
+      const errMsg = `API returned no token. Response: ${text}`;
+      console.error(errMsg);
+      parentPort.postMessage({ status: 'fail', account, error: errMsg });
+      return;
+    }
     parentPort.postMessage({ status: 'success', account, holdToken: tokenId });
   } catch (error) {
-    console.error('Error fetching hold token for account:', account.split(':')[0], error);  
-    parentPort.postMessage({ status: 'fail', account, error: error.message });
+    const errMsg = error?.message || (typeof error === 'object' ? JSON.stringify(error) : String(error));
+    console.error('Error fetching hold token for account:', account.split(':')[0], errMsg);
+    try {
+      parentPort.postMessage({ status: 'fail', account, error: errMsg });
+    } catch (_) {}
   }
 }
 
-fetchHoldToken();
+fetchHoldToken().catch(err => {
+  const errMsg = err?.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
+  console.error('Unhandled error in fetchHoldToken:', errMsg);
+  try {
+    parentPort.postMessage({ status: 'fail', account, error: errMsg });
+  } catch (_) {}
+});
