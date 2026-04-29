@@ -74,8 +74,12 @@ async function fetchHoldToken() {
           }
         });
       });
-      accountAccessToken = loginData?.user?.access_token || '';
-      createCookie({ name: 'token', value: loginData.user.access_token, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' });
+      accountAccessToken = loginData?.user?.access_token || loginData?.access_token || loginData?.data?.access_token || '';
+      console.log('DEBUG loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| accountAccessToken SET:', !!accountAccessToken);
+      if (!accountAccessToken) {
+        throw new Error(`Login succeeded but no access_token found. loginData: ${JSON.stringify(loginData)}`);
+      }
+      createCookie({ name: 'token', value: accountAccessToken, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' });
     }
     const DATA_DIR = process.env.DATA_DIR || 'data';
     const eventDetails = JSON.parse(fs.readFileSync(`./${DATA_DIR}/sor/eventDetails.json`));
