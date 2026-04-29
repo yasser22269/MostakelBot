@@ -139,7 +139,6 @@ async function prepareBookingInfo() {
 
     const proxy = proxies.length > 0 ? proxies[proxyIndex % proxies.length] : null;
     let agent = proxy ? new HttpsProxyAgent(proxy) : null;
-    agent = null;
 
     if (agent) {
         log('info', `Using proxy: ${proxy}`);
