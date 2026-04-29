@@ -1,0 +1,19 @@
+{
+  "data": {
+    "_id": "",
+    "slug": "",
+    "away_team": {
+      "_id": ""
+    },
+    "home_team": {
+      "_id": ""
+    },
+    "channel_keys": {},
+    "seats_io": {
+      "chart_key": "",
+      "event_key": "",
+      "season_key": ""
+    },
+    "event_tickets": []
+  }
+}
