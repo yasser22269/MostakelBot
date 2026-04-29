@@ -36,8 +36,7 @@ function log(level, ...args) {
     )
     .join(" ");
   console.log(
-    `${color}[${timestamp}] [${level.toUpperCase()}] ${message}${
-      colors.reset
+    `${color}[${timestamp}] [${level.toUpperCase()}] ${message}${colors.reset
     }`
   );
 }
@@ -119,7 +118,7 @@ export async function fetchAndDeobfuscatePublishedDetails(chartKey, workspaceKey
 export async function fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, channelKeys, agent, team) {
   const useChannel = process.env.USE_CHANNELS_IN_OBJECT_STATUS_FETCH === 'true';
   const channelsParam = channelKeys.length > 0 ? `,${channelKeys.join(',')}` : '';
-  const url = `https://api.seatcloud.com/adapter/sio/system/public/${workspaceKey}/rendering-info/objects?event_key=${encodeURIComponent(eventKey)}${useChannel ? '&channels=NO_CHANNEL'+ channelsParam:''}`;
+  const url = `https://api.seatcloud.com/adapter/sio/system/public/${workspaceKey}/rendering-info/objects?event_key=${encodeURIComponent(eventKey)}${useChannel ? '&channels=NO_CHANNEL' + channelsParam : ''}`;
   log("info", "Fetching and Deobfuscating Object Statuses from URL:", url);
   try {
     const response = await fetch(url, {
@@ -176,8 +175,8 @@ export async function fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, 
 
 export async function fetchRenderingInfoData(eventKey, workspaceKey, agent) {
   const renderingInfoURL = `https://api.seatcloud.com/adapter/sio/system/public/${workspaceKey}/rendering-info/?event_key=${encodeURIComponent(eventKey)}`;
-  console.log({renderingInfoURL});
-  
+  console.log({ renderingInfoURL });
+
   log("info", "Fetching Rendering Info from URL:", renderingInfoURL);
   try {
     const response = await fetch(renderingInfoURL, {
@@ -270,18 +269,41 @@ export async function fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey
     }
 
     const arrayBuffer = await response.arrayBuffer();
-    const scrambledDataUint8Array = new Uint8Array(arrayBuffer);
+    const uint8Array = new Uint8Array(arrayBuffer);
 
-    const deobfuscatedContent = await getUnscrambleData(
-      scrambledDataUint8Array,
-      eventKey, // Using eventKey as secret key for object statuses
-      false
-    );
+    // Debug: log response size and first bytes to help diagnose encoding
+    const firstBytes = Array.from(uint8Array.slice(0, 4)).map(b => '0x' + b.toString(16).padStart(2, '0')).join(' ');
+    log("info", `Object statuses V3 response: ${uint8Array.length} bytes, first bytes: [${firstBytes}], Content-Type: ${response.headers.get('content-type')}`);
 
-    const jsonData = JSON.parse(deobfuscatedContent);
+    // Handle empty response body gracefully (no seats available)
+    if (uint8Array.length === 0) {
+      log("warning", "Object statuses V3 endpoint returned empty body — no seats data.");
+      return [];
+    }
+
+    let jsonData;
+    // Check for gzip magic bytes (0x1f 0x8b) — decompress first, then parse
+    if (uint8Array[0] === 0x1f && uint8Array[1] === 0x8b) {
+      const decompressedText = await getUnscrambleData(uint8Array, eventKey, false);
+      if (!decompressedText || decompressedText.trim().length === 0) {
+        log("warning", "Object statuses V3: gzip-decompressed content is empty.");
+        return [];
+      }
+      jsonData = JSON.parse(decompressedText);
+    } else {
+      // Plain text JSON response
+      const decoder = new TextDecoder('utf-8');
+      const text = decoder.decode(uint8Array);
+      if (!text || text.trim().length === 0) {
+        log("warning", "Object statuses V3: plain text response is empty.");
+        return [];
+      }
+      jsonData = JSON.parse(text);
+    }
+
     const objectStatusesFilePath = path.join(ROOT_DIR, DATA_DIR, "sor", `objectStatuses_${team}.json`);
     fs.writeFileSync(objectStatusesFilePath, JSON.stringify(jsonData, null, 2));
-    log("success", "Object statuses V3 deobfuscated and saved to", objectStatusesFilePath);
+    log("success", "Object statuses V3 saved to", objectStatusesFilePath);
     return jsonData;
   } catch (error) {
     log("error", "Failed to fetch or deobfuscate object statuses V3:", error.message);
