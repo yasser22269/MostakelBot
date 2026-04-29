@@ -129,7 +129,8 @@ async function fetchHoldToken() {
     console.log('[STEP6] eventSlug:', eventSlug, '| isAhlan:', isAhlan, '(byEnv:', isAhlanByEnv, 'byShape:', isAhlanByShape, ')');
 
     const botVersion = process.env.BOT_VERSION || 'v1';
-    const url = `/event-detail/${eventData.slug}/hold-token?lang=en`;
+    const baseUrlPart = isSeason ? 'season-detail' : 'event-detail';
+    const url = `/${baseUrlPart}/${eventSlug}/hold-token?lang=en`;
     const fullUrl = `${ApiConfig.config.wbk.api}${url.startsWith("/") ? url : `/${url}`}`;
     console.log('Fetching hold token from:', fullUrl);
     // console.log({url});

@@ -63,8 +63,9 @@ const isSeason = process.env.IS_SEASON === 'true';
 const body = { lang: 'ar' };
 isSeason ? (body.season_id = eventData._id) : (body.event_id = eventData._id);
 
+const baseUrlPart = isSeason ? 'season-detail' : 'event-detail';
 const holdRes = await fetchClient({
-  url: `/event-detail/${eventData.slug}/hold-token?lang=en`,
+  url: `/${baseUrlPart}/${eventData.slug}/hold-token?lang=en`,
   includeAuth: true, includeToken: true, raw: true,
   options: {
     method: 'POST',

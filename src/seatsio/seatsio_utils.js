@@ -256,7 +256,7 @@ export async function fetchAndDeobfuscatePublishedDetailsV3(chartKey, workspaceK
 export async function fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeys, agent, team) {
   const traceId = generateTraceId();
   const channelsParam = channelKeys.join(',');
-  const url = `https://api.seatcloud.com/api/v2/${workspaceKey}/event/${eventKey}/items?channels=${channelsParam}&trace_id=${traceId}&plain=true`;
+  const url = `https://api.seatcloud.com/api/v2/${workspaceKey}/event/${eventKey}/items?allocations=${channelsParam}&trace_id=${traceId}&plain=true`;
   log("info", "Fetching and Deobfuscating Object Statuses V3 from URL:", url);
   try {
     const response = await fetch(url, {

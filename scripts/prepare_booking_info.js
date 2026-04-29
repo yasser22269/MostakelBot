@@ -373,8 +373,9 @@ async function prepareBookingInfo() {
       }
       
     } else if (botVersion === 'v3') {
-        const chartKey = eventData.seats_io.chart_key;
-        const eventKey = isSeason ? eventData.seats_io.season_key : eventData.seats_io.event_key;
+        const chartKey = eventData.seats_io?.chart_key || null;
+        const eventKey = isSeason ? (eventData.seats_io?.season_key || eventKeyFromPrompt) : (eventData.seats_io?.event_key || eventData.slug || eventKeyFromPrompt);
+
 
         console.log({chartKey, workspaceKey, botVersion})
         await fetchAndDeobfuscatePublishedDetailsV3(chartKey, workspaceKey, agent);
@@ -387,8 +388,9 @@ async function prepareBookingInfo() {
         await fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeysToCheckAway, agent, 'away');
         log('success', 'Object statuses away fetched and saved for v3.');
     } else { // v2
-        const chartKey = eventData.seats_io.chart_key;
-        const eventKey = isSeason ? eventData.seats_io.season_key : eventData.seats_io.event_key;
+        const chartKey = eventData.seats_io?.chart_key || null;
+        const eventKey = isSeason ? (eventData.seats_io?.season_key || eventKeyFromPrompt) : (eventData.seats_io?.event_key || eventData.slug || eventKeyFromPrompt);
+
 
       console.log({chartKey,workspaceKey})
         await fetchAndDeobfuscatePublishedDetails(chartKey, workspaceKey, agent);
