@@ -3,7 +3,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ApiConfig } from '../lib/chunk-LPIRJEMY.js';
 import { fetchClient } from '../lib/chunk-K342ITN7.js';
 import { createCookie } from '../lib/chunk-UFCTKZW2.js';
-import { useLogin } from '../lib/chunk-7ANTOXLV.js';
+import { loginWithPassword } from '../lib/chunk-BFAWQTPE.js';
 import { solveTurnstileAntiCaptcha } from '../captcha/capsolver.js';
 import { browserFetch } from '../utils/browser_fetch.js';
 import 'dotenv/config';
@@ -61,13 +61,7 @@ async function fetchHoldToken() {
     if (token) {
       createCookie({ name: 'token', value: token, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' }); // add the additional cookies
     } else {
-      const loginData = await new Promise((resolve, reject) => {
-        const keepAlive = setInterval(() => {}, 500);
-        useLogin({ lang: 'en', agent }).mutate({ email, password }, {
-          onSuccess: (data) => { clearInterval(keepAlive); resolve(data); },
-          onError: (error) => { clearInterval(keepAlive); reject(error); }
-        });
-      });
+      const loginData = await loginWithPassword({ email, password, locale: 'en', agent });
       accountAccessToken = loginData?.user?.access_token || loginData?.access_token || loginData?.data?.access_token || '';
       console.log('[STEP1] loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| token SET:', !!accountAccessToken);
       if (!accountAccessToken) {
