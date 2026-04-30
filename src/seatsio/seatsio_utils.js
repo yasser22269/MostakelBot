@@ -48,16 +48,20 @@ function generateTraceId() {
 
 const V3_HEADERS = {
   "accept": "*/*",
-  "accept-language": "en-US,en;q=0.9,ar;q=0.8,ar-IQ;q=0.7,de;q=0.6",
+  "accept-language": "en-US,en;q=0.9",
+  "accept-encoding": "gzip, deflate",
   "cache-control": "no-cache",
   "pragma": "no-cache",
-  "sec-ch-ua": "\"Google Chrome\";v=\"143\", \"Chromium\";v=\"143\", \"Not A(Brand\";v=\"24\"",
+  "sec-ch-ua": "\"Not;A=Brand\";v=\"99\", \"Google Chrome\";v=\"139\", \"Chromium\";v=\"139\"",
   "sec-ch-ua-mobile": "?0",
-  "sec-ch-ua-platform": "\"Linux\"",
+  "sec-ch-ua-platform": "\"Windows\"",
   "sec-fetch-dest": "empty",
   "sec-fetch-mode": "cors",
   "sec-fetch-site": "same-site",
-  "Referer": "https://chart.seatcloud.com/"
+  "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36",
+  "origin": "https://chart.seatcloud.com",
+  "referer": "https://chart.seatcloud.com/",
+  "priority": "u=1, i"
 };
 
 export async function fetchAndDeobfuscatePublishedDetails(chartKey, workspaceKey, agent) {
@@ -278,7 +282,20 @@ export async function fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey
       false
     );
 
-    const jsonData = JSON.parse(deobfuscatedContent);
+    if (!deobfuscatedContent || deobfuscatedContent.trim() === '') {
+      log("warning", "Deobfuscated content is empty for object statuses V3");
+      return [];
+    }
+
+    let jsonData;
+    try {
+      jsonData = JSON.parse(deobfuscatedContent);
+    } catch (parseError) {
+      log("error", "JSON.parse failed for object statuses V3. Raw content length:", deobfuscatedContent.length);
+      log("error", "First 100 chars of raw content:", deobfuscatedContent.substring(0, 100));
+      return [];
+    }
+
     const objectStatusesFilePath = path.join(ROOT_DIR, DATA_DIR, "sor", `objectStatuses_${team}.json`);
     fs.writeFileSync(objectStatusesFilePath, JSON.stringify(jsonData, null, 2));
     log("success", "Object statuses V3 deobfuscated and saved to", objectStatusesFilePath);
