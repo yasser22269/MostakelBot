@@ -243,7 +243,7 @@ export async function fetchAndDeobfuscatePublishedDetailsV3(chartKey, workspaceK
     const deobfuscatedContent = await getUnscrambleData(
       scrambledDataUint8Array,
       workspaceKey,
-      false
+      true
     );
 
     const jsonData = JSON.parse(deobfuscatedContent);
@@ -279,7 +279,7 @@ export async function fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey
     const deobfuscatedContent = await getUnscrambleData(
       scrambledDataUint8Array,
       eventKey, // Using eventKey as secret key for object statuses
-      false
+      true
     );
 
     if (!deobfuscatedContent || deobfuscatedContent.trim() === '') {
@@ -327,7 +327,7 @@ export async function fetchRenderingInfoDataV3(eventKey, workspaceKey, channelKe
     const deobfuscatedContent = await getUnscrambleData(
       scrambledDataUint8Array,
       eventKey, // Using eventKey as secret key for rendering info (matches bundle line 9797)
-      false
+      true
     );
 
     const jsonData = JSON.parse(deobfuscatedContent);

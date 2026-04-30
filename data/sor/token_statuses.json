@@ -1,12 +1,12 @@
 {
-  "2c1706a4-56f6-4948-9a04-b6e08cf38c62": {
-    "expiresAt": "2026-04-30T15:15:26Z",
+  "178db569-1132-41c3-8e0e-87702916e5db": {
+    "expiresAt": "2026-04-30T15:43:39Z",
     "hasAccessToPrivateChannels": false,
     "maxNumberOfHolds": 30,
     "messages": [],
-    "requestId": "fce222d1-b8e1-40d4-8350-98d29a83df6e",
+    "requestId": "54c3ac76-33cf-448b-a865-bda5430587a3",
     "teamKey": "66e63c10464382fb1f049832",
-    "token": "2c1706a4-56f6-4948-9a04-b6e08cf38c62",
-    "ttl": 170
+    "token": "178db569-1132-41c3-8e0e-87702916e5db",
+    "ttl": 516
   }
 }
