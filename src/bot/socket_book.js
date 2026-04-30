@@ -239,17 +239,21 @@ export async function establish_socket_connection(account, options = {}) {
     }
   }
 
-  // 5. Solve reCAPTCHA
-//  let reCaptchaToken = '1cAFcWeA7LbR5e4UXjUlowjrJvxL97HEKbqMopMS3_WT2nBm9s1jC0BYcGjd71BbCtxTAuBjurZcnLaUWAdCCJ5YXaev36vanhnBapy5UPOXaagm-LICkH7PJlUDkMDLTKDbkHf5_P4H7A9qtCY2HNC8Vn2ERhZ0lStpUxhyJH57IYDPFto8hMShrvZ6_y0pK2fFJ-mesmQX0VPTRzWKmvlyQ4TBziR6Pf7K0-kBCoKETvArWu9pST6oUycQb25NX6f8shnvPNZelIGhx1Muo3gTy0KK8_JMe522UoyC-5TlXsv8CaXvnR89Im0CHE9lrSumlE9BT_mLYVA1hYFfuiHgPADHZdauOpihYU9H8dZOkniEvuYMg6sDgvFQWHMEOnsdbDdmRUBxcHHFZ6efFLjVWabiCU0gdBqdtgmZweyZJtcWQo6_vc5ieBvrgTvgKWSIl1EASoJTsYsUdxk-iUNh2FdA35RN2PYBLEQaTGlWfj7tVijkjprqM3f5Biz57ostS-inHDkWiMpjQo6XssPptV8OOFDo4JlcBCItPyuMg6fSbpGNbZ2vh_wQwdIon3ePHRhIXfgMlBC0UddD8TWaSbJi3cTW3cmgDY5c8on9nRh0gZChW2TeBY2b8pF8bUAf4zCuQX4zqqu9c80y23oyyDN0nPEEGbL1VWCfBx-rpeEmuOa3txv0ZbEDuUhXebpTymBpZLCRJzGlWs2eDuHAi0Jd02y9Y2hoU2Aujh-3gXJ7Pqmdl2rQDGiko780UIMtl1do4Lyr11xeJMwQ2gKJApqDUwNgLLjT3Pg49RyOeXyzubtoHmouRibxk-0Jg2MgHS_zFx-DX9Di7yeqbZ6081AY_EN7IPuftsjAX1xLH8ctTYY85WYxne6OgxmiTlpeF-reAmuu--rnjjaZ8dD4c9y4exH5okAEVPrNtRX9rpJIM7TTeJTVwBxMTtRYQ0dLyi0rzlblSZWOfM3wlrXk95dq6X14vAtYfoOSlRJbhTX10LYMPJ8NywwhmW_My5EeB8wIHvXPliD-nsPrujLCmOA_SGuYIb2ifh5Y-yBb1luNS7AjP4aKn2r0Ls2JHvQtOA4wToSbCfHe6WPuHfo6QIdOivRIxp2D5gb2wAcg9I9qDiDd-V3MxozTXMNuHr1AXdkCX9qeOX8wrpondydNEy-fjm8S3bABT-FzkTcpBWHt-N-oh-R5ntw_Oxnn7QYQAug46YxhBhO2w98fF8Nz30NN8OGrZJywVQ2BB2NWntyEHw_kfr7hfYUPbzH5ylqRbGv2R4vYadprKUKsqonbtkwHNp8Rmnyf9lQ5ZDktkYyq7q_yFBHU2KzbGLzlm8xsLgIdrH6ZDB3rkOq_YWtChEx-FOy_0ji8fzZ1kRojqVTyFE6n7ijI8jbOIWvXVyYjDBWl99uvn1ogLm_SO37-zPc6HD9YEOLsbzteMpQQwwsQliUcKy3vM8sSk3c4xEHjkAnN_0lZwyIEQ-ysuMQH2shw5oouXlMUljrJwPqFpGukzGqO0TswquJTD6rYzK2_W6i8SQQmBdf5YiQ3pYYBR9ISJrkuZi4_MjBS02aJh8IGLo8XvNpuXLQDRVFRCytELqqc1QGjRuTyiN__airfKNbH2Iz-yqIiB7gvQqT8fP059j3gNWSGxD98VUEm3p9YD2519L6dBzECzl3ljt3jc5JHrmymxjnHcVGmza13aGq3PT4EiZVH1Nv0cqHGNOOPO79dd5TN52uBNfICKemxQ9bWOzxTeH65iJMh00BvK2MZgH39BZd1iNTEPHys779s2gYjmi3Lz3RQlWKs1v8ZLV4KcpZwbmJYwwOtZHG7DrQWAhfN9Fs4oYwudoZ5xB2bibcWyulZ8CF5g-yd_l-4ELeKeu0Dl923E_inJ_lf4K0eP6208yNR8ccdHrPDsu1_aGPXiJXLAvyyGAl0WKD3EMhNqd40htIAq-teaRqpsVAYGkHG9hx3ESLX_nGDNDuErAHAM5WnX7iB4U2vz2dmnyHjDUnI5v3d-NuN9LWUt6wt_cIuYBmp3lpQMQM4MbUn5cOvS6eX0rK9z7Q_1yX3lGE1dola8_dK7Wnr8lzm8yXYmkQesbvkBX492Pa08sUczOISq-wV1ZcJRjQ5nZ44nol93pV2V8Ok154AM7uSP4aA3VENhVpSCcXNmq1h6aoR1XtQUcd4';
+  // 5. Solve reCAPTCHA (with timeout to prevent blocking)
   let reCaptchaToken;
   try {
     const websiteURL = 'https://chart.seatcloud.com';
     const websiteKey = '6Lf7x-8qAAAAACTG6gffMEWoXQoQhKS6UWTkG9cD';
     if(renderingInfo.isRecaptchaRequired){
-      reCaptchaToken = await solveV3Wrapper(websiteURL, websiteKey, 'submit', 0.9);
+      const CAPTCHA_TIMEOUT_MS = 15000; // 15 second timeout
+      reCaptchaToken = await Promise.race([
+        solveV3Wrapper(websiteURL, websiteKey, 'submit', 0.9),
+        new Promise((_, reject) => setTimeout(() => reject(new Error('Captcha timeout (15s)')), CAPTCHA_TIMEOUT_MS))
+      ]);
     }
   } catch (e) {
-    log('warning', `Failed to solve reCAPTCHA for ${email}, using fallback: ${e.message}`);
+    log('warning', `Failed to solve reCAPTCHA for ${email}, connecting without captcha: ${e.message}`);
+    reCaptchaToken = null;
   }
 
   // 6. Build URL

@@ -98,10 +98,9 @@ export async function solveV3Wrapper(websiteURL, websiteKey, pageAction, minScor
         console.log('solving v3 (direct)');
         const reCaptchaToken = await solveV3AntiCaptcha(websiteURL, websiteKey, pageAction, minScore);
         return reCaptchaToken;
-        break;
       } catch (error) {
-        console.log(error);
-        return null;
+        console.log(`solveV3Wrapper attempt ${i + 1}/3 failed:`, error.message || error);
+        if (i === 2) return null; // Return null only after all retries exhausted
       }
     }
   }

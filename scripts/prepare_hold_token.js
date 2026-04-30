@@ -102,7 +102,7 @@ async function fetchHoldTokens() {
                     worker.terminate();
                 }
                 resolve();
-            }, 45000);
+            }, 90000);
 
             worker = new Worker('./src/bot/hold_token_worker.js', {
                 workerData: {
