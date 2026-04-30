@@ -9,6 +9,9 @@ const port = process.env.AHLAN_BROWSER_PORT || 5002;
 let browser;
 let page;
 
+const fetchQueue = [];
+let isProcessingQueue = false;
+
 async function launchBrowser() {
   console.log('Launching Puppeteer browser...');
   browser = await puppeteer.launch({
@@ -42,11 +45,18 @@ async function launchBrowser() {
   });
 }
 
-app.post('/fetch', async (req, res) => {
+async function processQueue() {
+  if (isProcessingQueue || fetchQueue.length === 0) return;
+  isProcessingQueue = true;
+
+  const { req, res } = fetchQueue.shift();
   const { url, method, headers, body } = req.body;
 
   if (!url) {
-    return res.status(400).json({ error: 'URL is required' });
+    res.status(400).json({ error: 'URL is required' });
+    isProcessingQueue = false;
+    processQueue();
+    return;
   }
 
   try {
@@ -55,19 +65,23 @@ app.post('/fetch', async (req, res) => {
     const response = await page.evaluate(async ({ url, method, headers, body }) => {
       const options = {
         method: method || 'GET',
-        headers: headers || {}
+        headers: headers || {},
+        credentials: 'include'
       };
 
       if (body) {
         options.body = typeof body === 'object' ? JSON.stringify(body) : body;
       }
 
-      const cookieHeader = headers?.cookie || headers?.Cookie;
-      if (cookieHeader) {
-        cookieHeader.split(';').forEach(c => {
+      const incomingCookie = headers?.cookie || headers?.Cookie;
+      if (incomingCookie) {
+        incomingCookie.split(';').forEach(c => {
           document.cookie = c.trim() + '; path=/';
         });
       }
+
+      if (options.headers.cookie) delete options.headers.cookie;
+      if (options.headers.Cookie) delete options.headers.Cookie;
 
       const res = await fetch(url, options);
       const contentType = res.headers.get('content-type');
@@ -77,6 +91,15 @@ app.post('/fetch', async (req, res) => {
         data = await res.json();
       } else {
         data = await res.text();
+      }
+
+      // clear document.cookie to prevent leakage
+      const cookieHeader = headers?.cookie || headers?.Cookie;
+      if (cookieHeader) {
+        cookieHeader.split(';').forEach(c => {
+          const cookieName = c.trim().split('=')[0];
+          document.cookie = cookieName + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        });
       }
 
       return {
@@ -92,6 +115,14 @@ app.post('/fetch', async (req, res) => {
     console.error('[Puppeteer Fetch Error]', error);
     res.status(500).json({ error: error.message });
   }
+
+  isProcessingQueue = false;
+  processQueue();
+}
+
+app.post('/fetch', (req, res) => {
+  fetchQueue.push({ req, res });
+  processQueue();
 });
 
 app.get('/status', async (req, res) => {

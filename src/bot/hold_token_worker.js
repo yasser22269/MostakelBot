@@ -171,8 +171,8 @@ async function fetchHoldToken() {
 
     let holdTokenResponse;
     if (isAhlan) {
-      const queueToken = process.env.AHLAN_QUEUE_TOKEN || '';
-      const ahlanCookie = [cookieToBeUsed, accountAccessToken ? `token=${accountAccessToken}` : ''].filter(Boolean).join('; ');
+      const hasTokenInCookie = cookieToBeUsed.includes('token=');
+      const ahlanCookie = [cookieToBeUsed, (accountAccessToken && !hasTokenInCookie) ? `token=${accountAccessToken}` : ''].filter(Boolean).join('; ');
       const ahlanBody = {
         slug: eventSlug,
         queueToken,

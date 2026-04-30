@@ -170,7 +170,7 @@ async function prepareBookingInfo() {
       const queueToken = process.env.AHLAN_QUEUE_TOKEN || '';
       const normalCookie = process.env.PREPARE_TOKEN_COOKIE || '';
       const userAgent = process.env.USER_AGENT || '';
-      const ahlanEventUrl = `https://www.ahlan.sa/api/ticketing/eventd?organizationSlug=${encodeURIComponent(eventKeyFromPrompt)}&queue-token=${encodeURIComponent(queueToken)}`;
+      const ahlanEventUrl = `https://www.ahlan.sa/api/ticketing/eventDetail?slug=${encodeURIComponent(eventKeyFromPrompt)}&queue-token=${encodeURIComponent(queueToken)}`;
       const ahlanHeaders = {
         ...(userAgent ? { 'user-agent': userAgent } : {}),
         ...(normalCookie ? { cookie: normalCookie } : {})
