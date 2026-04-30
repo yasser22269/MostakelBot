@@ -1,4 +1,5 @@
 import fs from 'fs/promises';
+import { existsSync } from 'fs';
 import path from 'path';
 import puppeteer from 'puppeteer';
 import express from 'express';
@@ -55,9 +56,22 @@ async function getRecaptchaScript(sitekey) {
 async function getBrowser() {
     if (!browser) {
         console.log('Launching browser instance...');
+        let execPath;
+        if (process.platform === 'win32') {
+            execPath = 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe';
+        } else {
+            const linuxPaths = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/opt/google/chrome/google-chrome'];
+            for (const p of linuxPaths) {
+                if (existsSync(p)) {
+                    execPath = p;
+                    break;
+                }
+            }
+            if (!execPath) execPath = '/usr/bin/google-chrome';
+        }
         browser = await puppeteer.launch({
             headless: 'new',
-            executablePath: process.platform === 'win32' ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe' : '/usr/bin/google-chrome-stable',
+            executablePath: execPath,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
