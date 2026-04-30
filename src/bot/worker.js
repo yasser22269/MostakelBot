@@ -14,65 +14,65 @@ import { fetchRenderingInfo as fetchRenderingInfoV1, getOrCreateBrowserId } from
 import { browserFetch } from '../utils/browser_fetch.js';
 import { readCookie } from '../lib/chunk-UFCTKZW2.js';
 
-const { 
-  account, proxy, url, usePreparedAccessTokens, blockName,  freeSeatsBatch, isSeason,
-  chartKey, eventId, workspaceKey, browserId, isGeneralAdmissionAreas, eventKey, channelKeysToCheck, 
-  renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, botVersion, chartToken,
-  socketSeatData
+const {
+    account, proxy, url, usePreparedAccessTokens, blockName, freeSeatsBatch, isSeason,
+    chartKey, eventId, workspaceKey, browserId, isGeneralAdmissionAreas, eventKey, channelKeysToCheck,
+    renderingInfo, publishedDetails, objectStatuses, eventDetails, holdToken, botVersion, chartToken,
+    socketSeatData
 } = workerData;
 
 const [email, password, token] = account.split(':');
-        async function sendToTelegram(message, chatIdOverride) {
-            if (process.env.sendTG == 'false') return;
-// const chatIds = ['-1002922665235']   //turki 
-          //
+async function sendToTelegram(message, chatIdOverride) {
+    if (process.env.sendTG == 'false') return;
+    // const chatIds = ['-1002922665235']   //turki 
+    //
     const chatIds = [process.env.tgChannelKey]
-  const apiKey =process.env.BOT_TOKEN;
-  const url = `https://api.telegram.org/bot${apiKey}/sendMessage`;
-  const targets = chatIdOverride ? [chatIdOverride] : chatIds;
-  for (const chatId of targets) {
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-          parse_mode: 'HTML'
-        }),
-      });
-      if (response.ok) {
-        console.log('success', `✅ تم إرسال رسالة التليجرام بنجاح إلى ${chatId}!`);
-      } else {
-        const errorData = await response.json();
-        console.log('error', `❌ فشل إرسال رسالة التليجرام إلى ${chatId}: ${response.status} ${response.statusText}`, errorData);
-      }
-    } catch (error) {
-      console.log('error', `❌ خطأ في إرسال رسالة التليجرام إلى ${chatId}:`, error);
+    const apiKey = process.env.BOT_TOKEN;
+    const url = `https://api.telegram.org/bot${apiKey}/sendMessage`;
+    const targets = chatIdOverride ? [chatIdOverride] : chatIds;
+    for (const chatId of targets) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message,
+                    parse_mode: 'HTML'
+                }),
+            });
+            if (response.ok) {
+                console.log('success', `✅ تم إرسال رسالة التليجرام بنجاح إلى ${chatId}!`);
+            } else {
+                const errorData = await response.json();
+                console.log('error', `❌ فشل إرسال رسالة التليجرام إلى ${chatId}: ${response.status} ${response.statusText}`, errorData);
+            }
+        } catch (error) {
+            console.log('error', `❌ خطأ في إرسال رسالة التليجرام إلى ${chatId}:`, error);
+        }
+        await new Promise(resolve => setTimeout(resolve, 1500));
     }
-    await new Promise(resolve => setTimeout(resolve, 1500));
-  }
 }
 
 const colors = {
-  info: "\x1b[36m",
-  success: "\x1b[32m",
-  warning: "\x1b[33m",
-  error: "\x1b[31m",
-  reset: "\x1b[0m",
+    info: "\x1b[36m",
+    success: "\x1b[32m",
+    warning: "\x1b[33m",
+    error: "\x1b[31m",
+    reset: "\x1b[0m",
 };
 
 function log(level, ...args) {
-  const options = {
-    year: 'numeric', month: 'numeric', day: 'numeric',
-    hour: '2-digit', minute: '2-digit', hour12: true
-  };
-  const timestamp = new Date().toLocaleString(undefined, options);
-  const color = colors[level] || colors.info;
-  const message = args.map(arg => (typeof arg === 'object' && arg !== null) ? JSON.stringify(arg) : arg).join(' ');
-  console.log(`${color}[${timestamp}] [${level.toUpperCase()}] ${message}${colors.reset}`);
+    const options = {
+        year: 'numeric', month: 'numeric', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', hour12: true
+    };
+    const timestamp = new Date().toLocaleString(undefined, options);
+    const color = colors[level] || colors.info;
+    const message = args.map(arg => (typeof arg === 'object' && arg !== null) ? JSON.stringify(arg) : arg).join(' ');
+    console.log(`${color}[${timestamp}] [${level.toUpperCase()}] ${message}${colors.reset}`);
 }
 
 async function bookTicket() {
@@ -126,7 +126,7 @@ async function bookTicket() {
 
         const objectsInfoToCheckOut = [];
         console.log('current channel keys to check in the booking worker is', channelKeysToCheck);
-        
+
         let teamKey;
         for (const item of freeSeatsBatch) {
             const freeSeat = item;
@@ -179,35 +179,36 @@ async function bookTicket() {
         };
         //update the favorate team  to teamKey 
         let endpoint = '/update-profile?lang=en';
-        if (teamKey){
-                    
-                const  favTeamBody = {
-                   favorite_team: teamKey , }
-        const updateFavTeamRes = await fetchClient({
-                    baseUrl: ApiConfig.config.wbk.authApi,
-                    url: endpoint,
+        if (teamKey) {
+
+            const favTeamBody = {
+                favorite_team: teamKey,
+            }
+            const updateFavTeamRes = await fetchClient({
+                baseUrl: ApiConfig.config.wbk.authApi,
+                url: endpoint,
+                agent,
+                options: {
                     agent,
-                    options: {
-                    agent,
-                        method: "POST",
-                        body: JSON.stringify(favTeamBody),
-                        includeAuth: true,
-                        includeToken: true,
-                        headers: headers
-                    }
-                });
+                    method: "POST",
+                    body: JSON.stringify(favTeamBody),
+                    includeAuth: true,
+                    includeToken: true,
+                    headers: headers
+                }
+            });
             if (updateFavTeamRes['status'] == 'success') {
                 log('success', 'Successfully updated favorite team to ', teamKey);
                 log('info', 'current user data is ', updateFavTeamRes);
-            }else       {
-                log('error', 'Failed to update favorite team to ',teamKey, updateFavTeamRes);
+            } else {
+                log('error', 'Failed to update favorite team to ', teamKey, updateFavTeamRes);
             }
 
 
-        }else{
+        } else {
             log('error', 'Failed to update favorite team  got no team key');
         }
-// return;
+        // return;
         const eventData = eventDetails?.data || eventDetails;
         const hasCheckoutCaptcha = eventData?.has_checkout_captcha !== false;
         const captcha = hasCheckoutCaptcha ? await generateRecaptchaToken('checkout') : null;
@@ -325,15 +326,15 @@ async function bookTicket() {
             const paymentUrl = decodeURIComponent(checkoutResJson.data.redirect_url);
             const checkoutSeats = objectsInfoToCheckOutOrder.map(seat => seat.label).join(', ');
             const totalCheckoutPrice = objectsInfoToCheckOutOrder.reduce((total, seat) => total + seat.pricing.price, 0);
-            const objInfo =  `${paymentUrl}: ${checkoutSeats}: ${totalCheckoutPrice}: ${email}:${password}\n`;
-            fs.writeFileSync(`./${DATA_DIR}/sor/payment_urls.txt`,objInfo, { flag: 'a' });
+            const objInfo = `${paymentUrl}: ${checkoutSeats}: ${totalCheckoutPrice}: ${email}:${password}\n`;
+            fs.writeFileSync(`./${DATA_DIR}/sor/payment_urls.txt`, objInfo, { flag: 'a' });
             sendToTelegram(objInfo)
 
             log('success', 'Payment URL:', paymentUrl);
             parentPort.postMessage({ status: 'success', account, paymentUrl });
         } else {
             const str = JSON.stringify(checkoutResJson, null, 2);
-            log('error','checkout failed', str);
+            log('error', 'checkout failed', str);
             throw new Error('Checkout failed');
         }
 
