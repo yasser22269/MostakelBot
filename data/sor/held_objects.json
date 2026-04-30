@@ -1,34 +1,3 @@
 {
-  "dd3a3cbe-eeb7-4384-a9a9-d659516b3770": [
-    {
-      "uuid": "19728",
-      "label": "01-A-2",
-      "timestamp": 1777463523422,
-      "objectId": "01-A-2"
-    },
-    {
-      "uuid": "19727",
-      "label": "01-A-1",
-      "timestamp": 1777463523422,
-      "objectId": "01-A-1"
-    },
-    {
-      "uuid": "45890",
-      "label": "21-A-2",
-      "timestamp": 1777463523422,
-      "objectId": "21-A-2"
-    },
-    {
-      "uuid": "45891",
-      "label": "21-A-1",
-      "timestamp": 1777463523422,
-      "objectId": "21-A-1"
-    },
-    {
-      "uuid": "45889",
-      "label": "21-A-3",
-      "timestamp": 1777463523422,
-      "objectId": "21-A-3"
-    }
-  ]
+  "[object Object]": []
 }

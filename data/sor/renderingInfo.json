@@ -1,186 +1,130 @@
 {
-  "venueKey": "4b899bd3-18ce-441b-a739-b9f0c637e9ef",
-  "venueId": "6935625d9bef06fea384e157",
-  "key": "3beb53ab-a5b8-4f4b-9120-d8590244fc89",
-  "name": "Al Ahli Season Tickets 2025 /2026",
+  "venueKey": "da23a49a-a0ae-4520-a9a4-5ba3272defdc",
+  "venueId": "6985d75233d409f436371274",
+  "key": "c645c9c1-170f-4711-adc7-70d09ef81a3b",
+  "name": "Qadsiah-vs-Nassr",
   "isBestAvailableEnabled": true,
   "specifications": [
     {
       "id": 1,
-      "name": "CAT 1",
-      "color": "rgba(69,163,241,1)",
+      "name": "Gold",
+      "color": "rgba(236,205,55,1)",
       "isAccessible": false
     },
     {
       "id": 2,
-      "name": "CAT 2",
-      "color": "#58B44F",
+      "name": "CAT1",
+      "color": "rgba(151,211,94,1)",
       "isAccessible": false
     },
     {
       "id": 3,
-      "name": "CAT 3",
-      "color": "rgba(242,149,54,1)",
+      "name": "CAT2",
+      "color": "rgba(255,0,0,1)",
       "isAccessible": false
     },
     {
       "id": 4,
-      "name": "Premium",
-      "color": "#CC2CF3",
+      "name": "CAT2a",
+      "color": "rgba(255,117,0,1)",
       "isAccessible": false
     },
     {
       "id": 5,
-      "name": "Cat 1 Away",
-      "color": "#545384",
+      "name": "CAT3",
+      "color": "rgba(67,104,199,1)",
+      "isAccessible": false
+    },
+    {
+      "id": 6,
+      "name": "CAT3a",
+      "color": "rgba(215,9,213,1)",
       "isAccessible": false
     },
     {
       "id": 7,
-      "name": "Premium Away",
-      "color": "#CC2CF3",
-      "isAccessible": false
-    },
-    {
-      "id": 8,
-      "name": "Silver",
-      "color": "rgba(158,153,164,1)",
+      "name": "CAT4",
+      "color": "rgba(144,93,176,1)",
       "isAccessible": false
     },
     {
       "id": 9,
-      "name": "Gold",
-      "color": "rgba(243,179,81,1)",
+      "name": "Accessibility",
+      "color": "#793E24",
       "isAccessible": false
     },
     {
       "id": 10,
-      "name": "VIP",
-      "color": "#992C4E",
-      "isAccessible": false
-    },
-    {
-      "id": 11,
-      "name": "ACCESSIBILITY",
-      "color": "rgba(144,245,0,1)",
-      "isAccessible": true
-    },
-    {
-      "id": 12,
-      "name": "Box 1",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 13,
-      "name": "Box 2",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 14,
-      "name": "Box 3",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 15,
-      "name": "Box 4",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 16,
-      "name": "Box 5",
-      "color": "#F53F3F",
+      "name": "GOLDa",
+      "color": "#CCEF1B",
       "isAccessible": false
     },
     {
       "id": 17,
-      "name": "Box 6",
-      "color": "#F53F3F",
+      "name": "VIP ZONE",
+      "color": "#A20EFB",
       "isAccessible": false
     },
     {
       "id": 18,
-      "name": "Box 7",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 19,
-      "name": "Box 8",
-      "color": "#F53F3F",
+      "name": "Premium hospitality",
+      "color": "rgba(117,49,254,1)",
       "isAccessible": false
     },
     {
       "id": 20,
-      "name": "Box 9",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 21,
-      "name": "Box 10",
-      "color": "#F53F3F",
+      "name": "BOXES",
+      "color": "#7E98AF",
       "isAccessible": false
     },
     {
       "id": 22,
-      "name": "Box 11",
-      "color": "#F53F3F",
-      "isAccessible": false
-    },
-    {
-      "id": 23,
-      "name": "Box 12",
-      "color": "#F53F3F",
+      "name": "Media",
+      "color": "#012ACB",
       "isAccessible": false
     },
     {
       "id": 24,
-      "name": "Box 13",
-      "color": "#F53F3F",
+      "name": "BOX 3",
+      "color": "#7E98AF",
       "isAccessible": false
     },
     {
-      "id": 25,
-      "name": "Box 14",
-      "color": "#F53F3F",
+      "id": 27,
+      "name": "CAT.1",
+      "color": "#45D862",
       "isAccessible": false
     },
     {
-      "id": 26,
-      "name": "Box 15",
-      "color": "#F24F51",
+      "id": 28,
+      "name": "New category",
+      "color": "#757FB0",
       "isAccessible": false
     }
   ],
   "allocations": [
     {
-      "id": "d1962c18-ab8d-42e1-b238-db0396795880",
-      "name": "COMMAN",
-      "color": "#b09336",
-      "index": 4,
-      "isPrivate": false
-    },
-    {
-      "id": "32b1ef53-0716-41bb-97f8-38faacdf00dc",
-      "name": "HOME ",
-      "color": "#c12f2f",
-      "index": 1,
+      "id": "692aeb8e-160a-1c1e-b2b3-d5263603310f",
+      "name": "Home Team",
+      "color": "#77B53B",
+      "index": 2,
       "isPrivate": false
     }
   ],
   "isEnded": false,
-  "isSeason": true,
+  "isSeason": false,
+  "seasonId": "6985d78733d409f4363713dc",
   "tableBookingConfig": {
     "mode": "INHERIT"
   },
   "isResaleDisabled": false,
   "restrictResaleToSingleSale": true,
   "isPreviewEnabled": false,
-  "isRecaptchaRequired": false,
+  "isRecaptchaRequired": true,
   "isDynamicPricingEnabled": false,
-  "colorBySeatType": false
+  "colorBySeatType": false,
+  "rendered_3d_venue": {
+    "enabled": false,
+    "venueID": ""
+  }
 }
