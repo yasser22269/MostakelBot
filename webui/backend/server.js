@@ -25,7 +25,7 @@ const io = new Server(httpServer, {
 app.use(cors());
 app.use(express.json());
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = 'your-secret-key'; // Should be in .env
 const AUTH_FILE = path.join(rootDir, 'email_pass.txt');
 const ADMIN_AUTH_FILE = path.join(rootDir, 'email_pass_admins.txt');
 const MAX_INSTANCES_PER_USER = 5;
@@ -214,73 +214,69 @@ app.get('/api/instances', authenticate, (req, res) => {
 });
 
 app.post('/api/instances', authenticate, (req, res) => {
-  try {
-    const { name, accounts, envOverrides, socketPort } = req.body;
-    if (!name || !accounts) return res.status(400).json({ error: 'Name and accounts are required' });
-
-    const instances = getInstances();
-
-    // Check limit per user
-    const limits = getLimits();
-    const userLimit = limits[req.user.email] || MAX_INSTANCES_PER_USER;
-    const userInstances = instances.filter(i => i.owner === req.user.email);
-    if (userInstances.length >= userLimit) {
-      return res.status(403).json({ error: `Limit reached: max ${userLimit} instances per user` });
-    }
-
-    const firstEmail = accounts.split('\n')[0].split(':')[0] || 'instance';
-    const dataDir = `data_${firstEmail.split('@')[0]}_${Date.now()}`;
-
-    // Find next available port if not provided
-    let finalSocketPort = parseInt(socketPort);
-    if (!finalSocketPort) {
-      const usedPorts = instances.map(i => i.socketPort).filter(Boolean);
-      finalSocketPort = usedPorts.length > 0 ? Math.max(...usedPorts) + 1 : 8080;
-    }
-
-    const newInstance = {
-      id: Date.now().toString(),
-      name,
-      owner: req.user.email,
-      email: firstEmail,
-      dataDir,
-      socketPort: finalSocketPort,
-      envOverrides: envOverrides || {},
-      status: 'stopped'
-    };
-
-    instances.push(newInstance);
-    saveInstances(instances);
-
-    // Ensure data dir exists
-    const fullDataPath = path.join(rootDir, dataDir);
-    const templateDataPath = path.join(rootDir, 'data');
-
-    if (fs.existsSync(templateDataPath)) {
-      copyDir(templateDataPath, fullDataPath);
-    } else if (!fs.existsSync(fullDataPath)) {
-      fs.mkdirSync(fullDataPath, { recursive: true });
-    }
-
-    const fullSorPath = path.join(fullDataPath, 'sor');
-    if (!fs.existsSync(fullSorPath)) {
-      fs.mkdirSync(fullSorPath, { recursive: true });
-    }
-
-    fs.writeFileSync(path.join(fullSorPath, 'acc.txt'), accounts.endsWith('\n') ? accounts : accounts + '\n');
-
-    if (!fs.existsSync(path.join(fullSorPath, 'proxy.txt'))) {
-      fs.writeFileSync(path.join(fullSorPath, 'proxy.txt'), '');
-    }
-    if (!fs.existsSync(path.join(fullSorPath, 'hold-tokens.json'))) {
-      fs.writeFileSync(path.join(fullSorPath, 'hold-tokens.json'), '{}');
-    }
-
-    res.json(newInstance);
-  } catch (err) {
-    console.error('Error creating instance:', err);
-    res.status(500).json({ error: err.message || 'Internal server error' });
+  const { name, accounts, envOverrides, socketPort } = req.body;
+  const instances = getInstances();
+  
+  // Check limit per user
+  const limits = getLimits();
+  const userLimit = limits[req.user.email] || MAX_INSTANCES_PER_USER;
+  const userInstances = instances.filter(i => i.owner === req.user.email);
+  if (userInstances.length >= userLimit) {
+    return res.status(403).json({ error: `Maximum limit of ${userLimit} instances reached` });
   }
+
+  const firstEmail = accounts.split('\n')[0].split(':')[0] || 'instance';
+  const dataDir = `data_${firstEmail.split('@')[0]}_${Date.now()}`;
+  
+  // Find next available port if not provided
+  let finalSocketPort = parseInt(socketPort);
+  if (!finalSocketPort) {
+    const usedPorts = instances.map(i => i.socketPort).filter(Boolean);
+    finalSocketPort = usedPorts.length > 0 ? Math.max(...usedPorts) + 1 : 8080;
+  }
+
+  const newInstance = {
+    id: Date.now().toString(),
+    name,
+    owner: req.user.email,
+    email: firstEmail,
+    dataDir,
+    socketPort: finalSocketPort,
+    envOverrides: envOverrides || {},
+    status: 'stopped'
+  };
+  
+  instances.push(newInstance);
+  saveInstances(instances);
+  
+  // Ensure data dir exists
+  const fullDataPath = path.join(rootDir, dataDir);
+  const templateDataPath = path.join(rootDir, 'data');
+
+  // Copy from template data if it exists
+  if (fs.existsSync(templateDataPath)) {
+    copyDir(templateDataPath, fullDataPath);
+  } else if (!fs.existsSync(fullDataPath)) {
+    fs.mkdirSync(fullDataPath, { recursive: true });
+  }
+
+  const fullSorPath = path.join(fullDataPath, 'sor');
+  if (!fs.existsSync(fullSorPath)) {
+    fs.mkdirSync(fullSorPath, { recursive: true });
+  }
+
+  // Create/Overwrite acc.txt with the provided credentials
+  fs.writeFileSync(path.join(fullSorPath, 'acc.txt'), accounts.endsWith('\n') ? accounts : accounts + '\n');
+  
+  // Ensure basic files exist if they weren't in data/
+  if (!fs.existsSync(path.join(fullSorPath, 'proxy.txt'))) {
+    fs.writeFileSync(path.join(fullSorPath, 'proxy.txt'), '');
+  }
+  if (!fs.existsSync(path.join(fullSorPath, 'hold-tokens.json'))) {
+    fs.writeFileSync(path.join(fullSorPath, 'hold-tokens.json'), '{}');
+  }
+
+  res.json(newInstance);
 });
 
 app.put('/api/instances/:id', authenticate, (req, res) => {
@@ -400,24 +396,21 @@ app.post('/api/instances/:id/stop', authenticate, (req, res) => {
   }
 });
 
-const ALLOWED_FILES = new Set(['acc.txt', 'proxy.txt', 'hold-tokens.json', 'held_objects.json', 'number_of_booked_seats_for_each_acc.txt']);
-
 // File management in data folder
 app.get('/api/instances/:id/files', authenticate, (req, res) => {
   const { id } = req.params;
   const instance = getInstances().find(i => i.id === id && (i.owner === req.user.email || req.user.role === 'admin'));
   if (!instance) return res.status(404).json({ error: 'Instance not found' });
-
+  
   const dataPath = path.join(rootDir, instance.dataDir, 'sor');
   if (!fs.existsSync(dataPath)) return res.json([]);
-
-  const files = fs.readdirSync(dataPath).filter(f => ALLOWED_FILES.has(f));
+  
+  const files = fs.readdirSync(dataPath).filter(f => f === 'acc.txt' || f === 'held_objects.json' || f === 'number_of_booked_seats_for_each_acc.txt' || f === 'hold-tokens.json');
   res.json(files);
 });
 
 app.get('/api/instances/:id/files/:filename', authenticate, (req, res) => {
     const { id, filename } = req.params;
-    if (!ALLOWED_FILES.has(filename)) return res.status(403).json({ error: 'Access denied' });
     const instance = getInstances().find(i => i.id === id && (i.owner === req.user.email || req.user.role === 'admin'));
     if (!instance) return res.status(404).json({ error: 'Instance not found' });
     const filePath = path.join(rootDir, instance.dataDir, 'sor', filename);
@@ -427,7 +420,6 @@ app.get('/api/instances/:id/files/:filename', authenticate, (req, res) => {
 
 app.post('/api/instances/:id/files/:filename', authenticate, (req, res) => {
     const { id, filename } = req.params;
-    if (!ALLOWED_FILES.has(filename)) return res.status(403).json({ error: 'Access denied' });
     const { content } = req.body;
     const instance = getInstances().find(i => i.id === id && (i.owner === req.user.email || req.user.role === 'admin'));
     if (!instance) return res.status(404).json({ error: 'Instance not found' });

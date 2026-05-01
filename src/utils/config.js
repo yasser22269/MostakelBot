@@ -88,6 +88,7 @@ export const BOT_SETTINGS = {
     THREADS: process.env.THREADS || 5,
 };
 export async function solveV3Wrapper(websiteURL, websiteKey, pageAction, minScore) {
+    // make 3 attempts
     for (let i = 0; i < 3; i++) {
       try {
         if (process.env.USE_LOCAL_CAPTCHA_SOLVER === 'true') {
@@ -95,13 +96,14 @@ export async function solveV3Wrapper(websiteURL, websiteKey, pageAction, minScor
           return await solveV3Local(websiteKey, websiteURL, pageAction, minScore);
         }
         console.log('solving v3 (direct)');
-        return await solveV3AntiCaptcha(websiteURL, websiteKey, pageAction, minScore);
+        const reCaptchaToken = await solveV3AntiCaptcha(websiteURL, websiteKey, pageAction, minScore);
+        return reCaptchaToken;
+        break;
       } catch (error) {
-        console.log(`solveV3Wrapper attempt ${i + 1}/3 failed:`, error.message || error);
+        console.log(error);
+        return null;
       }
     }
-    console.log('solveV3Wrapper: all 3 attempts failed, returning null');
-    return null;
   }
 export async function solveTurnstileWrapper(websiteURL, sitekey, action, cdata) {
     try {

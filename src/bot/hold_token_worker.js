@@ -3,8 +3,8 @@ import { HttpsProxyAgent } from 'https-proxy-agent';
 import { ApiConfig } from '../lib/chunk-LPIRJEMY.js';
 import { fetchClient } from '../lib/chunk-K342ITN7.js';
 import { createCookie } from '../lib/chunk-UFCTKZW2.js';
-import { loginWithPassword } from '../lib/chunk-BFAWQTPE.js';
-import { solveTurnstileAntiCaptcha, solveTurnstileLocal } from '../captcha/capsolver.js';
+import { useLogin } from '../lib/chunk-7ANTOXLV.js';
+import { solveTurnstileAntiCaptcha } from '../captcha/capsolver.js';
 import { browserFetch } from '../utils/browser_fetch.js';
 import 'dotenv/config';
 import fs from "fs";
@@ -61,43 +61,41 @@ async function fetchHoldToken() {
     if (token) {
       createCookie({ name: 'token', value: token, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' }); // add the additional cookies
     } else {
-      const loginData = await loginWithPassword({ email, password, locale: 'en', agent });
-      accountAccessToken = loginData?.user?.access_token || loginData?.access_token || loginData?.data?.access_token || '';
-      console.log('[STEP1] loginData keys:', JSON.stringify(Object.keys(loginData || {})), '| token SET:', !!accountAccessToken);
-      if (!accountAccessToken) {
-        throw new Error(`Login succeeded but no access_token found. loginData: ${JSON.stringify(loginData)}`);
-      }
-      createCookie({ name: 'token', value: accountAccessToken, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' });
-      console.log('[STEP2] createCookie done for:', email);
+      const loginData = await new Promise((resolve, reject) => {
+        useLogin({
+          lang: 'en',
+          agent
+        }).mutate({ email, password }, {
+          onSuccess: (data) => {
+            resolve(data);
+          },
+          onError: (error) => {
+            reject(error);
+          }
+        });
+      });
+      accountAccessToken = loginData?.user?.access_token || '';
+      createCookie({ name: 'token', value: loginData.user.access_token, domain: 'webook.com', path: '/', secure: true, sameSite: 'Strict' });
     }
     const DATA_DIR = process.env.DATA_DIR || 'data';
-    console.log('[STEP3] DATA_DIR:', DATA_DIR);
     const eventDetails = JSON.parse(fs.readFileSync(`./${DATA_DIR}/sor/eventDetails.json`));
     const eventData = eventDetails?.data || eventDetails;
     const renderInfo = JSON.parse(fs.readFileSync(`./${DATA_DIR}/sor/renderingInfo.json`));
-    console.log('[STEP4] files read, eventId:', eventData?._id, '| eventDetails.data exists:', !!eventDetails?.data);
 
     const siteKey = ApiConfig.config.cloudflarecaptcha.VITE_PUBLIC_TURNSTILE_SITE_KEY;
     const websiteURL = 'https://api.webook.com/api/v2';
-
+    
     let isError = true;
     let turnstileTokenResult = null;
     let retryCount = 0;
     const maxRetries = 5;
-    // Auto-detect Turnstile requirement from eventDetails, fallback to env var
-    const hasCfTurnstile = eventData?.has_cf_turnstile === true;
-    const captchaRequired = hasCfTurnstile || process.env.ENABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true';
-    console.log('[STEP5] captchaRequired:', captchaRequired, '| hasCfTurnstile:', hasCfTurnstile);
-    if (hasCfTurnstile) console.log('Turnstile required (detected from eventDetails has_cf_turnstile=true)');
+    const captchaRequired = process.env.ENABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true';
+    //if(!(process.env.DISABLE_CAPTCHA_FOR_HOLD_TOKENS === 'true')){
     if(captchaRequired){
         while(isError && retryCount < maxRetries){
           try {
-            console.log(`Attempting to solve Turnstile CAPTCHA (attempt ${retryCount + 1}/${maxRetries}) [local=${process.env.USE_LOCAL_CAPTCHA_SOLVER === 'true'}]`);
-            if (process.env.USE_LOCAL_CAPTCHA_SOLVER === 'true') {
-              turnstileTokenResult = await solveTurnstileLocal(websiteURL, siteKey);
-            } else {
-              turnstileTokenResult = await solveTurnstileAntiCaptcha(websiteURL, siteKey);
-            }
+            console.log(`Attempting to solve Turnstile CAPTCHA directly (attempt ${retryCount + 1}/${maxRetries})`);
+            turnstileTokenResult = await solveTurnstileAntiCaptcha(websiteURL, siteKey);
             if(turnstileTokenResult){
                 isError = false;
                 console.log('Successfully solved Turnstile token');
@@ -106,6 +104,7 @@ async function fetchHoldToken() {
             retryCount++;
             console.log(`Failed to solve Turnstile token (attempt ${retryCount}/${maxRetries}):`, error.message);
             if (retryCount < maxRetries) {
+                // Wait before retrying
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
           }
@@ -129,11 +128,10 @@ async function fetchHoldToken() {
     const isAhlanByPromptUrl = hasEventQueryParam(process.env.PROMPT_URL || '');
     const isAhlanByShape = Boolean(eventDetails && !eventDetails.data);
     const isAhlan = isAhlanByEnv || isAhlanByPromptUrl || isAhlanByShape;
-    console.log('[STEP6] eventSlug:', eventSlug, '| isAhlan:', isAhlan, '(byEnv:', isAhlanByEnv, 'byShape:', isAhlanByShape, ')');
+    console.log('eventSlug',eventSlug);
 
     const botVersion = process.env.BOT_VERSION || 'v1';
-    const baseUrlPart = isSeason ? 'season-detail' : 'event-detail';
-    const url = `/${baseUrlPart}/${eventSlug}/hold-token?lang=en`;
+    const url = `/event-detail/${eventData.slug}/hold-token?lang=en`;
     const fullUrl = `${ApiConfig.config.wbk.api}${url.startsWith("/") ? url : `/${url}`}`;
     console.log('Fetching hold token from:', fullUrl);
     // console.log({url});
@@ -158,19 +156,6 @@ async function fetchHoldToken() {
     }
   }
   cookieToBeUsed = additionalCookie;
-
-  // Auto-construct _q_session_ queue cookie if QUEUE_TOKEN is set but cookie is missing
-  const queueToken = process.env.QUEUE_TOKEN || '';
-  if (queueToken && !cookieToBeUsed.includes('_q_session_')) {
-    const queueCookieName = `_q_session_-event-detail-${eventSlug}`;
-    const queueCookiePart = `${queueCookieName}=${queueToken}`;
-    cookieToBeUsed = cookieToBeUsed ? `${cookieToBeUsed}; ${queueCookiePart}` : queueCookiePart;
-    console.log(`Auto-constructed queue session cookie for slug: ${eventSlug}`);
-    try {
-      const queuePayload = JSON.parse(Buffer.from(queueToken.split('.')[1], 'base64').toString('utf-8'));
-      console.log(`Queue position (n): ${queuePayload.n}, expires: ${new Date(queuePayload.e * 1000).toISOString()}`);
-    } catch (_) {}
-  }
 
     let holdTokenResponse;
     if (isAhlan) {
@@ -237,26 +222,11 @@ async function fetchHoldToken() {
     const tokenId = json.data?.token || json.token
 
     console.log('got hold token id ', tokenId);
-    if (!tokenId) {
-      const errMsg = `API returned no token. Response: ${text}`;
-      console.error(errMsg);
-      parentPort.postMessage({ status: 'fail', account, error: errMsg });
-      return;
-    }
     parentPort.postMessage({ status: 'success', account, holdToken: tokenId });
   } catch (error) {
-    const errMsg = error?.message || (typeof error === 'object' ? JSON.stringify(error) : String(error));
-    console.error('Error fetching hold token for account:', account.split(':')[0], errMsg);
-    try {
-      parentPort.postMessage({ status: 'fail', account, error: errMsg });
-    } catch (_) {}
+    console.error('Error fetching hold token for account:', account.split(':')[0], error);  
+    parentPort.postMessage({ status: 'fail', account, error: error.message });
   }
 }
 
-fetchHoldToken().catch(err => {
-  const errMsg = err?.message || (typeof err === 'object' ? JSON.stringify(err) : String(err));
-  console.error('Unhandled error in fetchHoldToken:', errMsg);
-  try {
-    parentPort.postMessage({ status: 'fail', account, error: errMsg });
-  } catch (_) {}
-});
+fetchHoldToken();

@@ -1,7 +1,0 @@
-Email                   | Password     | Seats | Event Slugs                                                                          
-------------------------+--------------+-------+--------------------------------------------------------------------------------------
-Zaidkh911@outlook.com   | 0534797220Nn | 2     | 1f5r8e6f9h-rsl-al-nassr-vs-al-ahli-25-26-2c8t5h4g                                    
-Ahdkh911@outlook.com    | 0534797220Nn | 5     | 1f5r8e6f9h-rsl-al-nassr-vs-al-ahli-25-26-2c8t5h4g, alqadsiah-vs-alnassr-tickets-25-26
-Hussamkh911@outlook.com | 0534797220Nn | 3     | alqadsiah-vs-alnassr-tickets-25-26                                                   
-------------------------+--------------+-------+--------------------------------------------------------------------------------------
-Total Seats: 10

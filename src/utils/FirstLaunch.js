@@ -69,7 +69,7 @@ export async function main(runSocketListener = true,currentAccountFile) {
                 if (holdSuccessful) {
                     heldSeats.push(seat);
                 } else {
-                    log('error', `Failed to hold seat ${seat.name || seat.objectLabelOrUuid || seat.label} for ${account.split(':')[0]}`);
+                    log('error', `Failed to hold seat ${seat.objectLabelOrUuid || seat.label} for ${account.split(':')[0]}`);   
                 }
             }
 
@@ -176,7 +176,7 @@ export async function main(runSocketListener = true,currentAccountFile) {
 
     //log("info", "Starting socket listener...");
     if (runSocketListener) {
-        execSync('node scripts/socket_listen.js', { stdio: 'inherit', cwd: process.cwd() });
+        execSync('node ../bot/socket_listen.js', { stdio: 'inherit' });
     }
 }
 

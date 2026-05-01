@@ -34,7 +34,4 @@ export const deleteAdminUser = (email) => api.delete(`/admin/users/${email}`);
 export const getEnvConfig = () => api.get('/config/env');
 export const updateEnvConfig = (config) => api.post('/config/env', config);
 
-export const getInstanceEnv = (id) => api.get(`/instances/${id}/env`);
-export const updateInstanceEnv = (id, env) => api.post(`/instances/${id}/env`, { envOverrides: env });
-
 export default api;

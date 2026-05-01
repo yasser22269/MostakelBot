@@ -233,7 +233,8 @@ async function checkTokenStatus() {
         const token = typeof tokenItem === 'object' ? tokenItem.token : tokenItem;
         const data = statuses[token];
 
-        if (data && data.ttl && data.ttl <= 120) {
+        if (false) {
+        //if (data && data.ttl && data.ttl <= 120) {
           log('warning', `Token ${token} (TTL: ${data.ttl}) is expiring soon (<= 2 min). Queueing transfer.`);
           const objectsToTransfer = heldObjects[token] || [];
           for (const obj of objectsToTransfer) {
@@ -472,28 +473,6 @@ async function askTheUser(){
 function readHoldTokens() {
   holdTokens = JSON.parse(fs.readFileSync(FILE_PATHS.HOLD_TOKENS_FILE));
 }
-function wouldCreateOrphan(seatLabel, heldObjects) {
-  const parts = seatLabel.split('-');
-  if (parts.length < 3) return false;
-  const seatNum = parseInt(parts[parts.length - 1]);
-  if (isNaN(seatNum)) return false;
-  const prefix = parts.slice(0, parts.length - 1).join('-'); // e.g. "68-H"
-
-  const allHeldIds = new Set();
-  for (const token in heldObjects) {
-    for (const obj of heldObjects[token]) {
-      allHeldIds.add(obj.objectId || obj);
-    }
-  }
-
-  const lbl = (n) => `${prefix}-${n}`;
-  // holding seatNum would orphan seatNum-1 if seatNum-2 is held and seatNum-1 is free
-  if (seatNum >= 3 && allHeldIds.has(lbl(seatNum - 2)) && !allHeldIds.has(lbl(seatNum - 1))) return true;
-  // holding seatNum would orphan seatNum+1 if seatNum+2 is held and seatNum+1 is free
-  if (allHeldIds.has(lbl(seatNum + 2)) && !allHeldIds.has(lbl(seatNum + 1))) return true;
-  return false;
-}
-
 async function processFreeSeat(item) {
   try {
 
@@ -542,17 +521,13 @@ if (releasedObjects.includes(item.objectLabelOrUuid || item.label)) {
     const proxy = proxies.length > 0 ? proxies[proxyIndex] : null;
     const objinfo = `${account.split(':')[0]}:${account.split(':')[1]} ${item.objectLabelOrUuid} ${item.eventKey}\n`;
 
-    const currentHeldObjects = getAllHeldObjects();
-    if (wouldCreateOrphan(item.objectLabelOrUuid || item.label, currentHeldObjects)) {
-      log('warning', `Skipping ${item.objectLabelOrUuid || item.label} — would leave an orphan seat`);
-      return;
-    }
-
     const [holdSuccessful] = await holdObject(account, proxy, item, null,false,'hold-object',holdToken);
 
     if (holdSuccessful) {
       //fs.appendFileSync(path.join(DATA_DIR, 'hold_successful.txt'), objinfo);
-      // sendToTelegram is already called inside holdObject in utils.js
+      // sendToTelegram(`
+        // ${account.split(':')[0]} ${account.split(':')[1]} \n
+        //     Held: ${objinfo} \nEvent URL: ${process.env.PROMPT_URL}`);
 
       const [home, away] = await getObjectStatusesFromFS();
       let objectStatuses = process.env.FORCE_CHANNEL_TYPE == 'home' ? home : away;

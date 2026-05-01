@@ -1,119 +1,43 @@
 {
-  "venueKey": "da23a49a-a0ae-4520-a9a4-5ba3272defdc",
-  "venueId": "6985d75233d409f436371274",
-  "key": "c645c9c1-170f-4711-adc7-70d09ef81a3b",
-  "name": "Qadsiah-vs-Nassr",
+  "venueKey": "b2cda05b-7198-4e35-a44b-1a60586b4f7c",
+  "venueId": "6975fb849aea0b110da39b01",
+  "key": "b5925f0d-e581-4bc3-b2b8-942c8cbc40ee",
+  "name": "ayed-at-vocally-riyadh",
   "isBestAvailableEnabled": true,
   "specifications": [
     {
       "id": 1,
-      "name": "Gold",
-      "color": "rgba(236,205,55,1)",
+      "name": "VIP",
+      "color": "#54BE75",
       "isAccessible": false
     },
     {
       "id": 2,
-      "name": "CAT1",
-      "color": "rgba(151,211,94,1)",
+      "name": "Platinum",
+      "color": "rgba(227,84,84,1)",
       "isAccessible": false
     },
     {
       "id": 3,
-      "name": "CAT2",
-      "color": "rgba(255,0,0,1)",
+      "name": "Gold",
+      "color": "rgba(215,166,84,1)",
       "isAccessible": false
     },
     {
       "id": 4,
-      "name": "CAT2a",
-      "color": "rgba(255,117,0,1)",
+      "name": "Silver",
+      "color": "rgba(170,118,211,1)",
       "isAccessible": false
     },
     {
       "id": 5,
-      "name": "CAT3",
-      "color": "rgba(67,104,199,1)",
+      "name": "Bronze",
+      "color": "#0A5AAF",
       "isAccessible": false
-    },
-    {
-      "id": 6,
-      "name": "CAT3a",
-      "color": "rgba(215,9,213,1)",
-      "isAccessible": false
-    },
-    {
-      "id": 7,
-      "name": "CAT4",
-      "color": "rgba(144,93,176,1)",
-      "isAccessible": false
-    },
-    {
-      "id": 9,
-      "name": "Accessibility",
-      "color": "#793E24",
-      "isAccessible": false
-    },
-    {
-      "id": 10,
-      "name": "GOLDa",
-      "color": "#CCEF1B",
-      "isAccessible": false
-    },
-    {
-      "id": 17,
-      "name": "VIP ZONE",
-      "color": "#A20EFB",
-      "isAccessible": false
-    },
-    {
-      "id": 18,
-      "name": "Premium hospitality",
-      "color": "rgba(117,49,254,1)",
-      "isAccessible": false
-    },
-    {
-      "id": 20,
-      "name": "BOXES",
-      "color": "#7E98AF",
-      "isAccessible": false
-    },
-    {
-      "id": 22,
-      "name": "Media",
-      "color": "#012ACB",
-      "isAccessible": false
-    },
-    {
-      "id": 24,
-      "name": "BOX 3",
-      "color": "#7E98AF",
-      "isAccessible": false
-    },
-    {
-      "id": 27,
-      "name": "CAT.1",
-      "color": "#45D862",
-      "isAccessible": false
-    },
-    {
-      "id": 28,
-      "name": "New category",
-      "color": "#757FB0",
-      "isAccessible": false
-    }
-  ],
-  "allocations": [
-    {
-      "id": "692aeb8e-160a-1c1e-b2b3-d5263603310f",
-      "name": "Home Team",
-      "color": "#77B53B",
-      "index": 2,
-      "isPrivate": false
     }
   ],
   "isEnded": false,
   "isSeason": false,
-  "seasonId": "6985d78733d409f4363713dc",
   "tableBookingConfig": {
     "mode": "INHERIT"
   },

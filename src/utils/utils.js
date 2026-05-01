@@ -419,7 +419,7 @@ async function holdObject(account, proxy, freeSeat, teamID, notfirstTry,action =
 
           }else{
             log('success', 'Successfully hold', freeSeat.objectLabelOrUuid || seatNameOrLabel, 'for', account.split(':')[0]);
-            await sendToTelegram(`${account.split(':')[0]} ${account.split(':')[1]} \nHeld: ${seatNameOrLabel || freeSeat.objectLabelOrUuid} \nEvent URL: ${process.env.PROMPT_URL}`);
+            sendToTelegram(`${account.split(':')[0]} ${account.split(':')[1]} \nHeld: ${seatNameOrLabel || freeSeat.objectLabelOrUuid} \nEvent URL: ${process.env.PROMPT_URL}`);
           }
         }else{
           log('warning', 'successfully released', freeSeat.objectLabelOrUuid || seatNameOrLabel, 'for', account.split(':')[0]);
@@ -477,7 +477,7 @@ const startWorker = (account, proxy,freeSeatsBatch) => {
             chartToken, // v1
         };
 
-        const workerFile = './src/bot/worker.js';
+        const workerFile =   '../bot/worker.js';
         const worker = new Worker(workerFile, { workerData });
         activeWorkers.add(worker);
 
@@ -555,20 +555,15 @@ async function updateObjects() {
 
     if (botVersion === 'v3') {
         //log('warning', 'start fetching V3', eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home')
-        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home') || [];
+        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatusesV3(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home');
     } else if (botVersion === 'v2') {
         //log('warning', 'start fetching', eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home')
-        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home') || [];
-    }
-
-    if (!objectStatusesJsonParsed || objectStatusesJsonParsed.length === 0) {
-        console.log("No data fetched or empty data, ensuring array...");
-        objectStatusesJsonParsed = [];
+        objectStatusesJsonParsed = await fetchAndDeobfuscateObjectStatuses(eventKey, workspaceKey, channelKeysToCheck, agentV1, currentTeam === 'home' ? 'away' : 'home');
     }
 
     if (botVersion === 'v2' || botVersion === 'v3') {
-        if (objectStatusesJsonParsed.length === 0) console.log('no object status found');
-        objectStatusesJsonParsed.sort((a, b) =>
+        if (objectStatusesJsonParsed?.length === 0) console.log('no object status found');
+        objectStatusesJsonParsed?.sort((a, b) =>
             (a.name || a.label || '').localeCompare((b.name || b.label || ''), undefined, { numeric: true })
         );
     } else {
@@ -577,11 +572,10 @@ async function updateObjects() {
             const objectStatusesRes = await fetchRenderingInfoV1(objectStatusesURL, chartToken, browserId, { method: 'GET' }, true, agentV1);
             const objectStatusesBuffer = await objectStatusesRes.arrayBuffer();
             const objectStatusesJson = SeatsioDeobfuscator.deobfuscate(objectStatusesBuffer, chartKey);
-            objectStatusesJsonParsed = JSON.parse(objectStatusesJson) || [];
-            objectStatusesJsonParsed.sort((a, b) => a.objectLabelOrUuid.localeCompare(b.objectLabelOrUuid, undefined, { numeric: true }));
+            objectStatusesJsonParsed = JSON.parse(objectStatusesJson);
+            objectStatusesJsonParsed?.sort((a, b) => a.objectLabelOrUuid.localeCompare(b.objectLabelOrUuid, undefined, { numeric: true }));
         } catch (e) {
-            console.log("Error fetching v1 statuses:", e);
-            objectStatusesJsonParsed = [];
+            console.log(e);
         }
     }
     // const objectStatusesFilePath = path.join(FILE_PATHS.OBJECT_STATUSES_AWAY_FILE, `objectStatuses_${currentTeam === 'home' ? 'away' : 'home'}.json`);
@@ -591,7 +585,7 @@ async function updateObjects() {
 async function getObjectStatusesFromFS() {
     const home = fs.readFileSync(FILE_PATHS.OBJECT_STATUSES_HOME_FILE, 'utf-8');
     const away = fs.readFileSync(FILE_PATHS.OBJECT_STATUSES_AWAY_FILE, 'utf-8');
-    return [JSON.parse(home), JSON.parse(away)];
+    return [...JSON.parse(home), ...JSON.parse(away)];
 }
 
 function updateSeats(objectStatuses) {
@@ -685,20 +679,6 @@ async function update() {
     // if (freeSeats.length > 0) return;
 }
 
-// Returns all unique non-null allocation_channel_keys from event tickets (v3 support)
-function getAllocationChannelKeys(eventData) {
-    const tickets = eventData?.event_tickets || [];
-    const keys = new Set();
-    for (const ticket of tickets) {
-        if (Array.isArray(ticket.allocation_channel_keys)) {
-            for (const key of ticket.allocation_channel_keys) {
-                if (key) keys.add(key);
-            }
-        }
-    }
-    return [...keys];
-}
-
 function setupChannelKeys(channelType = '') {
     const eventData = eventDetails?.data || eventDetails;
     channelKeys = eventData.channel_keys;
@@ -716,11 +696,7 @@ function setupChannelKeys(channelType = '') {
     channelKeyForHomeTeam = homeTeamKey ? channelKeys[homeTeamKey]?.[0] : undefined;
     channelKeyForAwayTeam = awayTeamKey ? channelKeys[awayTeamKey]?.[0] : undefined;
     channelKeyCommon = channelKeys['common']?.[0];
-
-    // For v3: supplement channelKeysToCheck with allocation-based channel keys from tickets
-    const allocationKeys = botVersion === 'v3' ? getAllocationChannelKeys(eventData) : [];
-
-    channelKeysToCheck = ["NO_CHANNEL", channelKeyCommon, channelKeyForHomeTeam, ...allocationKeys].filter(Boolean);
+    channelKeysToCheck = ["NO_CHANNEL", channelKeyCommon, channelKeyForHomeTeam].filter(Boolean);
     currentChannelKey = homeTeamKey;
     currentChannelType = channelType;
 }
@@ -740,19 +716,7 @@ async function main(config = {}) {
 
     url = config.PROMPT_URL;
     proxies = getProxies();
-    const eventKeyFromPrompt = process.env.FORCE_EVENT_SLUG_VALUE || (() => {      
-          try {
-            const parts = new URL(url).pathname.split('/').filter(Boolean);
-            const markers = ['events', 'event-detail', 'season-detail'];
-            for (const marker of markers) {
-                const idx = parts.indexOf(marker);
-                if (idx !== -1 && parts[idx + 1]) return parts[idx + 1];
-            }
-            return parts[5] || '';
-        } catch (_) {
-            return url.split('/')[5] || '';
-        }
-    })();
+    const eventKeyFromPrompt = url.split('/')[5];
      isSeason = process.env.IS_SEASON === 'true' ;
     log('info', 'Event Key:', eventKeyFromPrompt);
 
@@ -786,14 +750,11 @@ async function main(config = {}) {
     eventDetails = JSON.parse(fs.readFileSync(FILE_PATHS.EVENT_DETAILS_FILE));
     const eventData = eventDetails?.data || eventDetails;
     workspaceKey = eventData?.seats_io?.workspace_key || ENV_SEATCLOUD_WORKSPACE_KEY;
-    eventId = eventData?._id || '';
-    chartKey = eventData?.seats_io?.chart_key || null;
-    eventKey = process.env.FORCE_EVENT_SLUG_VALUE || (
-    isSeason
-        ? eventData?.seats_io?.season_key
-        : eventData?.seats_io?.event_key
-    ) || eventKeyFromPrompt;
-    
+    eventId = eventData._id;
+    chartKey = eventData.seats_io.chart_key;
+    eventKey = isSeason
+        ? eventData.seats_io.season_key
+        : eventData.seats_io.event_key;
     try {
         holdTokens = JSON.parse(fs.readFileSync(FILE_PATHS.HOLD_TOKENS_FILE));
     } catch (error) {
@@ -868,10 +829,9 @@ async function getObjectsWithChannels(){
       const hashes = await getHashes();
     console.log('hashes are ',hashes);
       const channelOrAllocation = process.env.BOT_VERSION === 'v3' ? 'allocations' : 'channels';
-      const allocationList = renderingInfo[channelOrAllocation] || [];
-      const homeObjects = allocationList.find(o => o.hashedKey === hashes.home);
-      const awayObjects = allocationList.find(o => o.hashedKey === hashes.away);
-      const commonObjects = allocationList.find(o => o.hashedKey === hashes.common);
+      const homeObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.home);
+      const awayObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.away);
+      const commonObjects = renderingInfo[channelOrAllocation].find(o => o.hashedKey === hashes.common);
     //console.log('homeObjects are ',homeObjects);
 
       let result = process.env.BOT_VERSION == 'v1' ? {

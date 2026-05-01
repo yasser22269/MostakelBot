@@ -2,10 +2,13 @@ node_modules/
 dist/
 MyWinUiApp/
 uglified_project/
+# sor/
 bundled/
+#data_*/
+# bundled copy/
 project_copy_for_aouse/
 project_copy_abo_said/
 data/sor/objectStatuses_home.json
 data/sor/objectStatuses_away.json
 abd-alrahman-bot/
-
+data_*/

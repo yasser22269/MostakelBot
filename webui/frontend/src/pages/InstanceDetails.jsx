@@ -47,7 +47,7 @@ const InstanceDetails = () => {
   const fetchFiles = async () => {
     try {
       const { data } = await getInstanceFiles(id);
-      setFiles(data.filter(f => ['acc.txt', 'proxy.txt', 'hold-tokens.json', 'held_objects.json', 'number_of_booked_seats_for_each_acc.txt'].includes(f)));
+      setFiles(data.filter(f => f === 'acc.txt' || f === 'held_objects.json' || f === 'number_of_booked_seats_for_each_acc.txt' || f === 'hold-tokens.json'));
     } catch (err) {
       console.error(err);
     }

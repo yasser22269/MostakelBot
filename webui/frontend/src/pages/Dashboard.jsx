@@ -91,8 +91,8 @@ const Dashboard = () => {
       setNewSocketPort('');
       setEditingInstance(null);
       fetchInstances();
-    } catch (err) {
-      alert(err?.response?.data?.error || `Failed to ${editingInstance ? 'update' : 'create'} instance`);
+    } catch {
+      alert(`Failed to ${editingInstance ? 'update' : 'create'} instance`);
     }
   };
 

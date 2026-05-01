@@ -33,14 +33,6 @@ module.exports = {
       NODE_ENV: 'development',
       DATA_DIR: 'data_a_1773902774742',
       tgChannelKey: "-5108260501",
-    },
-    {
-    name: 'ahlan-browser',
-    script: 'solvev3_cap/ahlan_browser_service.js',
-    env: {
-      NODE_ENV: 'development',
-      AHLAN_BROWSER_PORT: 5002,
-      AHLAN_BROWSER_HEADLESS: 'true'
     }
     }
 

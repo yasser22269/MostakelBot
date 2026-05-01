@@ -1,43 +1,33 @@
 import esbuild from 'esbuild';
 import inlineWorkerPlugin from 'esbuild-plugin-inline-worker';
-import path from 'path';
 
-const entryPoints = [
-  'scripts/prepare_booking_info.js',
-  'scripts/socket_listen.js', 
-  'scripts/prepare_access_token.js',
-  'scripts/prepare_hold_token.js',
-  'src/utils/FirstLaunch.js',
-  'src/bot/worker.js',
-  'src/bot/hold_token_worker.js',
-  'scripts/release.js'
-];
+const entryPoints = ['prepare_booking_info.js','socketListen.js', 'prepare_access_token.js','prepare_hold_token.js','FirstLaunch.js','worker.js','hold_token_worker.js','release.js']
 
-const workers = [];
+const workers = []
+// const workers = ['worker.js','hold_token_worker.js']
 
-function bundleFile(filePath, outputAsIs = false, outputFolder = 'bundled/') {
-  const fileName = path.basename(filePath);
-  const outfile = outputFolder + (outputAsIs ? fileName.split('.')[0] + '.cjs' : fileName);
+function bundleFile(fileName,outputAsIs = false,outputFolder = 'bundled/') {
+let outfileSuffix = 'bundled.cjs';
   
-  esbuild.build({
-    entryPoints: [filePath],
-    bundle: true,
-    outfile: outfile,
-    format: 'cjs', // Output CommonJS format
-    platform: 'node',
-    plugins: [inlineWorkerPlugin({ platform: 'node' })],
-    external: ['yargs'] ,
-  }).catch(() => process.exit(1));
-  
-  console.log(`Bundled: ${filePath}`);
+esbuild.build({
+  entryPoints: [fileName],
+  bundle: true,
+  outfile: outputFolder + (outputAsIs?fileName.split('.')[0] + '.cjs': fileName),
+  format: 'cjs' , // Output CommonJS format
+  platform: 'node',
+  plugins: [inlineWorkerPlugin({ platform: 'node' })],
+  external: ['yargs'] ,
+}).catch(() => process.exit(1));
+  console.log(`Bundled: ${fileName}`);
 }
 
-entryPoints.forEach(filePath => {
-  bundleFile(filePath);
-  bundleFile(filePath, false, 'bundled copy/');
-});
+entryPoints.forEach(fileName => {
+  bundleFile(fileName);
+  bundleFile(fileName,false,'bundled copy/');
 
-workers.forEach(filePath => {
-  bundleFile(filePath, true);
-  bundleFile(filePath, false, 'bundled copy/');
-});
+})
+workers.forEach(fileName => {
+  bundleFile(fileName,true);
+  bundleFile(fileName,false,'bundled copy/');
+
+})

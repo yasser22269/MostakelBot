@@ -102,7 +102,7 @@ async function fetchHoldTokens() {
                     worker.terminate();
                 }
                 resolve();
-            }, 120000);
+            }, 45000);
 
             worker = new Worker('./src/bot/hold_token_worker.js', {
                 workerData: {
@@ -129,8 +129,7 @@ async function fetchHoldTokens() {
             });
             worker.on("error", (error) => {
                 clearTimeout(timeout);
-                const errMsg = error?.message || (typeof error === 'object' ? JSON.stringify(error) : String(error));
-                log("error", `Hold token worker error for account ${account.split(':')[0]}: ${errMsg}`);
+                log("error", `Hold token worker error for account ${account.split(':')[0]}: ${error}`);
                 delete holdTokens[account.split(':')[0]];
                 resolve();
             });

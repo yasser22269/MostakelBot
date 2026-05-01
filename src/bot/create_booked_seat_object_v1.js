@@ -22,91 +22,66 @@ function constructBookedSeatObject(objectLabel, renderingInfo, publishedDetails,
     const [sectionLabel, rowLabel, seatLabel] = objectLabel.split('-');
     const eventData = eventDetails?.data || eventDetails;
 
-    // 1. Find the object's current status (V3 API uses 'name', V1/V2 uses 'objectLabelOrUuid')
-    const objectStatus = objectStatuses.find(obj => obj.objectLabelOrUuid === objectLabel || obj.name === objectLabel);
+    // 1. Find the object's current status
+    const objectStatus = objectStatuses.find(obj => obj.objectLabelOrUuid === objectLabel);
 
     if (!objectStatus) {
         console.error(`Status for object ${objectLabel} not found.`);
         return {};
     }
-    // 2. Find the channel information (V3 uses 'allocations', V1/V2 uses 'channels')
-    const isV3Format = !publishedDetails.subChart && Array.isArray(publishedDetails.sections);
-    const channelList = renderingInfo.channels || renderingInfo.allocations || [];
-    const channel = channelList.find(c => Array.isArray(c.objects) && c.objects.includes(objectLabel));
-    const hashedChannelKey = channel ? channel.hashedKey : (objectStatus.allocation || null);
+    // 2. Find the channel information
+    const channel = renderingInfo.channels.find(c => c.objects.includes(objectLabel));
+    const hashedChannelKey = channel ? channel.hashedKey : null;
 
-    let sectionDetails, rowDetails = {}, seatDetails = {};
-    let categoryKey = null;
+    // 3. Find detailed seat information from the published chart
+    const sectionDetails = publishedDetails.subChart.sections.find(s => s.label === sectionLabel);
+    // const rowDetails = sectionDetails?.subChart.rows.find(r => r.label === rowLabel);
+    // const seatDetails = rowDetails?.seats.find(s => s.label === seatLabel);
 
-    if (isV3Format) {
-        // V3: sections are at publishedDetails.sections, no seat-level data
-        const v3Section = publishedDetails.sections?.find(s => s.name === sectionLabel);
-        sectionDetails = v3Section ? {
-            uuid: v3Section.id,
-            label: sectionLabel,
-            topLeft: v3Section.geometry?.points?.[0] || { x: 0, y: 0 },
-            entrance: null,
-            categoryKey: objectStatus.specificationKey || null
-        } : null;
-        // Use objectStatus ids/labels for row/seat
-        seatDetails = {
-            uuid: objectStatus.uuid,
-            label: objectStatus.ids?.own || seatLabel,
-            categoryKey: objectStatus.specificationKey || null,
-            x: 0, y: 0
-        };
-        categoryKey = objectStatus.specificationKey || null;
-    } else {
-        // V1/V2: full seat hierarchy in publishedDetails.subChart.sections
-        sectionDetails = publishedDetails.subChart?.sections?.find(s => s.label === sectionLabel);
-        const rowDetailsArray = sectionDetails?.subChart?.rows?.filter(r => r.label === rowLabel) || [];
-        const all_seats = rowDetailsArray.flatMap(r => r.seats);
-        if (rowDetailsArray.length > 0) {
-            rowDetails = rowDetailsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
-        }
-        seatDetails = all_seats.find(s => s.label === seatLabel) || {};
-        categoryKey = seatDetails?.categoryKey || sectionDetails?.categoryKey || rowDetails?.categoryKey || null;
+    // Find all rowDetails with the same rowLabel and merge them
+    const rowDetailsArray = sectionDetails?.subChart.rows.filter(r => r.label === rowLabel) || [];
+    const all_seats = rowDetailsArray.flatMap(r => r.seats);
+    let rowDetails = {};
+    if (rowDetailsArray.length > 0) {
+        console.log(`Found ${rowDetailsArray.length} rowDetails with label ${rowLabel} in section ${sectionLabel}`);
+        rowDetails = rowDetailsArray.reduce((acc, curr) => ({ ...acc, ...curr }), {});
     }
 
+    const seatDetails = all_seats.find(s => s.label === seatLabel) || {};
+    // const seatDetails = rowDetails?.seats.find(s => s.label === seatLabel);
+        const categoryKey =  seatDetails?.categoryKey || sectionDetails?.categoryKey || rowDetails?.categoryKey || null; 
     if (!categoryKey) {
         console.log('No category key found for seat', objectLabel);
     }
     // 4. Find category and pricing information
-    const categoryDetails = (renderingInfo.categories || []).find(cat => cat.key === categoryKey);
-
-    // Find matching ticket: try seats_io_category, then specificationName, then allocation_ids
-    const allocationId = seatDetails?.allocationId || rowDetails?.allocationId || sectionDetails?.allocationId;
-    const specName = objectStatus.specificationName || '';
-    const ticketDetails = eventData.event_tickets.find(ticket => parseInt(ticket.seats_io_category) === categoryKey)
-        || eventData.event_tickets.find(ticket => ticket.name === specName || ticket.title === specName)
-        || (allocationId && eventData.event_tickets.find(ticket => ticket.allocation_ids?.includes(allocationId)))
-        || null;
+    const categoryDetails = renderingInfo.categories.find(cat => cat.key === categoryKey);
+    
+    const ticketDetails = eventData.event_tickets.find(ticket => parseInt(ticket.seats_io_category) === categoryKey);
 
     let category = {};
     let pricing = {};
 
-    if (ticketDetails) {
-        const price = parseFloat(ticketDetails.price) + parseFloat(ticketDetails.vat || 0);
-        const formattedPrice = `[${ticketDetails.currency || 'SAR'}]${price.toFixed(0)}`;
-
+    if (categoryDetails && ticketDetails) {
+        const price = parseFloat(ticketDetails.price) + parseFloat(ticketDetails.vat);
+        const formattedPrice = `[${ticketDetails.currency}]${price.toFixed(0)}`;
+        
         pricing = {
             price: price,
             formattedPrice: formattedPrice
         };
 
-        const catLabel = categoryDetails?.label || ticketDetails.title || ticketDetails.name || specName || '';
         category = {
-            label: catLabel,
-            color: categoryDetails?.color || '#cccccc',
-            accessible: categoryDetails?.accessible || false,
-            key: categoryDetails?.key || categoryKey,
+            label: categoryDetails.label,
+            color: categoryDetails.color,
+            accessible: categoryDetails.accessible,
+            key: categoryDetails.key,
             pricing: {
                 price: price,
                 formattedPrice: formattedPrice
             },
-            isFiltered: false,
-            hasSelectableObjects: true,
-            selectableObjectsStatuses: ["free"]
+            isFiltered: false, // Default value
+            hasSelectableObjects: true, // Default value
+            selectableObjectsStatuses: ["free"] // Default value
         };
     }
 
@@ -117,8 +92,6 @@ function constructBookedSeatObject(objectLabel, renderingInfo, publishedDetails,
         label: objectLabel,
         id: objectLabel,
         uuid: seatDetails.uuid,
-        sectionUUID: sectionDetails?.uuid || null,
-        heldInfo: { uuid: seatDetails.uuid || '', label: objectLabel },
         labels: {
             own: seatLabel,
             parent: rowLabel,
@@ -138,18 +111,17 @@ function constructBookedSeatObject(objectLabel, renderingInfo, publishedDetails,
         category: category,
         pricing: pricing,
         selectable: true, // Default
-        status: 'free',
-        isAvailable: true,
+        status: objectStatus.status,
         forSale: true, // Default
         dataPerEvent: {
             [eventData.seats_io.event_key]: {
-                status: 'free'
+                status: objectStatus.status
             }
         },
         seasonStatusOverriddenQuantity: objectStatus.seasonStatusOverriddenQuantity,
         entrance: sectionDetails?.entrance || null,
         previousStatus: objectStatus.previousStatus || null,
-        center: (seatDetails && sectionDetails && sectionDetails.topLeft) ? { x: (seatDetails.x || 0) + sectionDetails.topLeft.x, y: (seatDetails.y || 0) + sectionDetails.topLeft.y } : null,
+        center: seatDetails && sectionDetails ? { x: seatDetails.x + sectionDetails.topLeft.x, y: seatDetails.y + sectionDetails.topLeft.y } : null,
         isOrphan: false, // Default
         parent: {
             type: "row"
