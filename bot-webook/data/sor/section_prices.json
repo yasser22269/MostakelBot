@@ -1,0 +1,965 @@
+{
+  "sections": [
+    {
+      "section_name": "529",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "521",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "528",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "527",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "526",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "524",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "523",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "522",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "525",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "520",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "519",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "518",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "517",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "516",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "515",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "514",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "530",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "531",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "532",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "533",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "534",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "535",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "536",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "538",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "541",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "540",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "539",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "512",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "509",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "510",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "511",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "537",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "513",
+      "category_label": "CAT 4",
+      "price": 26.087,
+      "vat": 3.913,
+      "total_price": 30
+    },
+    {
+      "section_name": "107",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "108",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "109",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "110",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "111",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "126",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "127",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "128",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "129",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "130",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "313",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "314",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "312",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "311",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "310",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "309",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "308",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "332",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "333",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "334",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "335",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "336",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "337",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "338",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "543",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "542",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "544",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "545",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "505",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "546",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "547",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "548",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "502",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "503",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "504",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "506",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "508",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "507",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "315",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "307",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "331",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "339",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "112",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "125",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "131",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "106",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "105",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "132",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "340",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "306",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "305",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "341",
+      "category_label": "CAT 3",
+      "price": 52.174,
+      "vat": 7.826,
+      "total_price": 60
+    },
+    {
+      "section_name": "327",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "319",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "318",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "316",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "317",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "328",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "330",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "113",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "114",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "123",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "124",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "329",
+      "category_label": "CAT 2",
+      "price": 104.348,
+      "vat": 15.652,
+      "total_price": 120
+    },
+    {
+      "section_name": "104",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "121",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "118",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "115",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "122",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "324",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "325",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "326",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "323",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "322",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "321",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "320",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "345",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "344",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "343",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "302",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "303",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "301",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "133",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "304",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "342",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "120",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "119",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "117",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "116",
+      "category_label": "CAT 1",
+      "price": 173.913,
+      "vat": 26.087,
+      "total_price": 200
+    },
+    {
+      "section_name": "101",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "136",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "102",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "135",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "103",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "134",
+      "category_label": "Premium",
+      "price": 434.783,
+      "vat": 65.217,
+      "total_price": 500
+    },
+    {
+      "section_name": "S2",
+      "category_label": "Match Lounge",
+      "price": 2173.913,
+      "vat": 326.087,
+      "total_price": 2500
+    },
+    {
+      "section_name": "S3",
+      "category_label": "Match Lounge",
+      "price": 2173.913,
+      "vat": 326.087,
+      "total_price": 2500
+    },
+    {
+      "section_name": "1",
+      "category_label": "VIP",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "5",
+      "category_label": "VIP",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "2",
+      "category_label": "VIP",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "4",
+      "category_label": "VIP",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "3",
+      "category_label": "VIP",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "S1",
+      "category_label": "Zone A",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    },
+    {
+      "section_name": "S4",
+      "category_label": "Zone A",
+      "price": "N/A",
+      "vat": "N/A",
+      "total_price": "N/A"
+    }
+  ],
+  "included": "104,107,108,109,110,111,126,127,128,129,130,121,118,115,122,529,324,325,326,327,323,322,321,320,319,521,313,314,312,311,310,309,308,332,333,334,335,336,337,338,345,344,343,302,303,301,528,527,526,524,523,522,525,520,519,518,517,516,515,514,530,531,532,533,534,535,536,538,543,542,541,540,539,544,545,505,546,547,548,502,503,504,506,512,508,509,510,511,507,537,513,318,315,316,317,307,328,330,331,339,112,113,114,123,124,125,131,106,105,132,133,340,306,305,341,304,342,120,119,117,116,329",
+  "excluded": "1,5,2,4,3,101,136,102,135,103,134,S1,S2,S3,S4"
+}

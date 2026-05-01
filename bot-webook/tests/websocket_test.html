@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script src="https://cdn.ably.com/lib/ably.min-1.js"></script>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <div id="messages"></div>
+    <script>
+        const ably = new Ably.Realtime({ key: 'hnsCTA.N9m7fg:y3JI9JQ1krTED-b9' });
+        const channel = ably.channels.get('seatsio');
+
+        channel.subscribe(function(message) {
+            const messagesDiv = document.getElementById('messages');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = JSON.stringify(message.data);
+            messagesDiv.appendChild(messageElement);
+            console.log('Received message:', message.data);
+        });
+    </script>
+</body>
+</html>

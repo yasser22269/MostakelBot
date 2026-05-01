@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seats.io Debug</title>
+</head>
+<body>
+    <h1>Seats.io Debug Page</h1>
+    <div id="chart"></div>
+    <script src="chart.js"></script>
+    <script>
+        new seatsio.SeatingChart({
+            divId: 'chart',
+            workspaceKey: 'a-public-key',
+            event: 'an-event-key'
+        }).render();
+    </script>
+</body>
+</html>
