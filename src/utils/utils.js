@@ -591,7 +591,7 @@ async function updateObjects() {
 async function getObjectStatusesFromFS() {
     const home = fs.readFileSync(FILE_PATHS.OBJECT_STATUSES_HOME_FILE, 'utf-8');
     const away = fs.readFileSync(FILE_PATHS.OBJECT_STATUSES_AWAY_FILE, 'utf-8');
-    return [...JSON.parse(home), ...JSON.parse(away)];
+    return [JSON.parse(home), JSON.parse(away)];
 }
 
 function updateSeats(objectStatuses) {

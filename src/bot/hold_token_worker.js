@@ -4,7 +4,7 @@ import { ApiConfig } from '../lib/chunk-LPIRJEMY.js';
 import { fetchClient } from '../lib/chunk-K342ITN7.js';
 import { createCookie } from '../lib/chunk-UFCTKZW2.js';
 import { loginWithPassword } from '../lib/chunk-BFAWQTPE.js';
-import { solveTurnstileAntiCaptcha } from '../captcha/capsolver.js';
+import { solveTurnstileAntiCaptcha, solveTurnstileLocal } from '../captcha/capsolver.js';
 import { browserFetch } from '../utils/browser_fetch.js';
 import 'dotenv/config';
 import fs from "fs";
@@ -92,8 +92,12 @@ async function fetchHoldToken() {
     if(captchaRequired){
         while(isError && retryCount < maxRetries){
           try {
-            console.log(`Attempting to solve Turnstile CAPTCHA directly (attempt ${retryCount + 1}/${maxRetries})`);
-            turnstileTokenResult = await solveTurnstileAntiCaptcha(websiteURL, siteKey);
+            console.log(`Attempting to solve Turnstile CAPTCHA (attempt ${retryCount + 1}/${maxRetries}) [local=${process.env.USE_LOCAL_CAPTCHA_SOLVER === 'true'}]`);
+            if (process.env.USE_LOCAL_CAPTCHA_SOLVER === 'true') {
+              turnstileTokenResult = await solveTurnstileLocal(websiteURL, siteKey);
+            } else {
+              turnstileTokenResult = await solveTurnstileAntiCaptcha(websiteURL, siteKey);
+            }
             if(turnstileTokenResult){
                 isError = false;
                 console.log('Successfully solved Turnstile token');
@@ -102,7 +106,6 @@ async function fetchHoldToken() {
             retryCount++;
             console.log(`Failed to solve Turnstile token (attempt ${retryCount}/${maxRetries}):`, error.message);
             if (retryCount < maxRetries) {
-                // Wait before retrying
                 await new Promise(resolve => setTimeout(resolve, 1000));
             }
           }
