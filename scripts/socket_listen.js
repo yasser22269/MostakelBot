@@ -188,7 +188,9 @@ async function fetchAllTokenStatuses() {
       if (!Array.isArray(tokenList)) continue;
 
       for (const tokenItem of tokenList) {
+        if (!tokenItem) continue;
         const token = typeof tokenItem === 'object' ? tokenItem.token : tokenItem;
+        if (!token) continue;
         const tracingId = `${Date.now()}-${generateTracingSuffix()}`;
         const url = `https://api.seatcloud.com/api/v2/token/${token}?trace_id=${tracingId}`;
 
@@ -230,7 +232,9 @@ async function checkTokenStatus() {
       if (!Array.isArray(tokenList)) continue;
 
       for (const tokenItem of tokenList) {
+        if (!tokenItem) continue;
         const token = typeof tokenItem === 'object' ? tokenItem.token : tokenItem;
+        if (!token) continue;
         const data = statuses[token];
 
         if (false) {

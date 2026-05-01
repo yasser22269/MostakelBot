@@ -109,25 +109,38 @@ export async function sendToTelegram(message, options = {}) {
     if (process.env.sendTG == 'false') return;
 
     for (const chatId of chatIds) {
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: message,
-                    parse_mode: 'HTML',
-                    ...options
-                }),
-            });
-            if (response.ok) {
-                console.log(`Telegram message sent to ${chatId}`);
-            } else {
-                const errorData = await response.json();
-                console.log(`Failed to send Telegram message to ${chatId}: ${response.status} ${response.statusText}`, errorData);
+        let retries = 3;
+        while (retries > 0) {
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: message,
+                        parse_mode: 'HTML',
+                        ...options
+                    }),
+                });
+                if (response.ok) {
+                    console.log(`Telegram message sent to ${chatId}`);
+                    break;
+                } else {
+                    const errorData = await response.json();
+                    if (response.status === 429) {
+                        const retryAfter = (errorData?.parameters?.retry_after || 10) * 1000;
+                        console.log(`Telegram 429 for ${chatId}, retrying after ${retryAfter / 1000}s...`);
+                        await new Promise(resolve => setTimeout(resolve, retryAfter));
+                        retries--;
+                    } else {
+                        console.log(`Failed to send Telegram message to ${chatId}: ${response.status} ${response.statusText}`, errorData);
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.log(`Error sending Telegram message to ${chatId}:`, error);
+                break;
             }
-        } catch (error) {
-            console.log(`Error sending Telegram message to ${chatId}:`, error);
         }
         await new Promise(resolve => setTimeout(resolve, 200));
     }
